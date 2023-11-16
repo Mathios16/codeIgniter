@@ -8,16 +8,27 @@
             $this->load->helper('url_helper');
         }
 
-        public function searchDB() {
+        public function searchDB() : String {
 
             $data['reflection'] = new ReflectionClass('testeSession');
             $data['nameClass'] = $data['reflection']->getName();
 
+            return $data['nameClass'];
+
+        }
+
+        public function getTrigrama() : String {
+
+            $data['trigrama'] = strstr(searchDB(),'[a-z]');
+            $data['trigrama'] += stripos(searchDB(), '[A-Z]');
+            $data['trigrama'] += strrchr(searchDB(),'[a-z]');
+
+            return $data['trigrama'];
         }
 
         public function index(){
 
-            $data[$data['nameClass']] = $this->db->select('*')->get($data['nameClass'])->result();
+            $data[searchDB()] = $this->db->select('*')->get(searchDB())->result();
             $data['title'] = 'Teste de banco de dados';
 
             $this->load->view('templates/header', $data);
@@ -28,9 +39,9 @@
 
         public function view(){
 
-            $data['bd'] = $this->db->select('bd_id, bd_nome')->where('bd_id',$this->uri->segment(3))->get('bd')->result();
+            $data[searchDB()] = $this->db->select('*')->where(getTrigrama().'_id',$this->uri->segment(3))->get(searchDB())->result();
 
-            if (empty($data['bd']))
+            if (empty(searchDB()))
                 show_404();
 
             $this->load->view('templates/header', $data);
