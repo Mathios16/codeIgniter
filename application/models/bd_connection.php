@@ -5,6 +5,12 @@
             $this->load->database();
         }
 
+        public function search_bd() {
+
+            
+
+        }
+
         public function get_bd($id = FALSE) {
 
             if ($id === FALSE) {
@@ -12,7 +18,7 @@
                 return $query->result_array();
             }
 
-            $query = $this->db->get_where('bd',array('tsn_id' => $id));
+            $query = $this->db->get_where('testesession',array('tsn_id' => $id));
             return $query->row_array();
 
         }
