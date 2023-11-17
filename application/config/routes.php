@@ -50,5 +50,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 $route['pages/view'] = 'pages/view';
-$route['pages/index'] = 'pages/index';
+$route['validation'] = 'validation';
+$route['pages'] = 'pages';
+$route['pages/selectLine'] = 'pages/selectLine';
+//$route['testeSession/selectTable'] = 'testeSession/selectTable';
 $route['pages/viewDB'] = 'pages/viewDB';
