@@ -1,6 +1,7 @@
 
 <?php
-echo '<h2>'.$bd[0]->bd_id.'</h2>';
-echo $bd[0]->bd_nome;
+    foreach($testessesion as $tsn => $val)
+        echo '<h2>'.$tsn.'</h2>';
+        echo $val;
 ?>
 <br><p><a href = "<?php echo site_url('pages/index') ?>">Index</a></p>
