@@ -32,6 +32,12 @@
 
         }
 
+        public function searchView() {
+
+            
+
+        }
+
     }
 
 ?>

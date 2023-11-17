@@ -5,12 +5,6 @@
             $this->load->database();
         }
 
-        public function search_bd() {
-
-            
-
-        }
-
         public function get_bd($id = FALSE) {
 
             if ($id === FALSE) {
