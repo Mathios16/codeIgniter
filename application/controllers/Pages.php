@@ -37,9 +37,9 @@
             validation($this->input, 'senha');
 
             $data['db'] = $this->db->select($this->getParameter())
-                                                 ->where($this->getTrigrama().'senha',$this->input->post('senha'))
-                                                 ->get($this->searchDB())
-                                                 ->result();
+                                   ->where($this->getTrigrama().'senha',$this->input->post('senha'))
+                                   ->get($this->searchDB())
+                                   ->result();
                              
             if (empty($data['db']))
                 show_error('Senha pode estar errada');
