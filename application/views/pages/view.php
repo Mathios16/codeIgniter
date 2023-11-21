@@ -15,7 +15,7 @@
 
 ?>
 
-<br><p><a href = "<?php echo site_url('pages/select') ?>">Voltar</a></p>
+<br><p><a href = "<?php echo site_url('pages/index') ?>">Voltar</a></p>
 
 <br><p><a href = "<?php echo site_url('pages/close_session') ?>">Fechar sessao</a></p>
 

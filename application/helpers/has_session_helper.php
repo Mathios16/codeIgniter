@@ -1,8 +1,8 @@
 <?php
 
-    function get_session($name) : bool {
+    function get_session($object, $name) : bool {
 
-        return ( isset($_SESSION["{$name}"]) != NULL ? TRUE : FALSE );   
+        return ( $object->session->has_userdata($name) != NULL ? TRUE : FALSE );   
 
     }
 

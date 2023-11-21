@@ -1,1 +1,0 @@
-<p>sessao fechada</p>

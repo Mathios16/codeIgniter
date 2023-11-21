@@ -7,7 +7,9 @@
             parent::__construct();
 
             $this->load->library('table');
+            $this->load->library('session');
 
+            $this->load->helper('html');
             $this->load->helper('url_helper');
             $this->load->helper('form');
             $this->load->helper('has_session');
@@ -16,8 +18,12 @@
 
         public function index() {
 
-            if(get_session('password'))
+            if(get_session($this,'password') === TRUE)
+            {
                 $this->select_view();
+                return;
+            }
+            
 
             $data['title'] = 'Teste do '.$this->searchDB();
 
@@ -35,18 +41,16 @@
 
         }
 
-        public function close_session() {
-
-            unset($_SESSION);
-
-            $this->index();
-
-        }
-
         public function select_table(){
 
-            validation($this, 'password');
-            validation($this, 'email');
+
+            if( ! get_session($this,'password') OR  ! get_session($this,'email'))
+            {
+                $this->session->set_userdata('password',$this->input->post('password'));
+                $this->session->set_userdata('email',$this->input->post('email'));
+                validation($this, 'password');
+                validation($this, 'email'); 
+            }
 
             $data['table_heading'] = explode(" , ", $this->get_parameter());
 
@@ -62,13 +66,18 @@
 
         public function select_line() {
 
-            validation($this, 'password');
-            validation($this, 'email');
+            if( ! get_session($this,'password') OR  ! get_session($this,'email'))
+            {
+                $this->session->set_userdata('password',$this->input->post('password'));
+                $this->session->set_userdata('email',$this->input->post('email'));
+                validation($this, 'password');
+                validation($this, 'email');
+            }
 
             $data['table_heading'] = explode(" , ", $this->get_parameter());
 
-            $where = array($this->get_trigrama().'email'=> $this->input->post('email'),
-                           $this->get_trigrama().'senha'=> $this->input->post('password'));
+            $where = array($this->get_trigrama().'email'=> $this->session->email,
+                           $this->get_trigrama().'senha'=> $this->session->password);
 
             $data['consult'] = $this->db->select($this->get_parameter())
                                         ->where($where)
@@ -85,7 +94,13 @@
             
         }
 
+        
+        public function close_session() {
 
+            $this->session->unset_userdata('password');
+            $this->index();
+
+        }
 
         private function get_parameter() : String {
 

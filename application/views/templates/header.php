@@ -1,10 +1,5 @@
 <html>
         <head>
-                <?php 
-                        if( ! get_session('password'))
-                                session_start(); 
-                ?>
-                <title>CodeIgniter Tutorial</title>
-                <link rel="stylesheet" href="public/style.css">
+                <?php echo link_tag('public/style.css'); ?>
         </head>
         <body>
