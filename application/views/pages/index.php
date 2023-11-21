@@ -1,13 +1,15 @@
-<?php session_start(); ?>
-
 <h2><?php echo $title; ?></h2>
 
-<div class = "container">
-        <?php echo form_open('pages/selectLine'); ?>
-                <input type = "text" name = "nome" required></br>
-                <input type = "text" name = "e-mail" required></br>
-                <input type = "password" name = "senha" required></br>
+<div>
+        <?php 
+        
+                echo form_open('pages/table'); 
 
-                <button type = "submit" name = "Login">Login</button>
-        </form>
+                echo form_input('email','email').'</br>';
+                echo form_password('password','').'</br>';
+        
+                echo form_submit('submit','Login');
+                echo form_close();
+
+        ?>
 </div>
