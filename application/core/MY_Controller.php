@@ -14,19 +14,5 @@
 
         }
 
-        protected function getParameter() : String {
-
-            $parameter = $this->getTrigrama().'nome , '
-                        .$this->getTrigrama().'email';
-
-            return $parameter;
-        }
-
-        protected function getTrigrama() : String {
-
-            $trigrama = ' tsn_';
-
-            return $trigrama;
-        }
     }
 ?>

@@ -1,23 +1,21 @@
-<table>
-    <tr>
-        <?php
-            foreach($bd as $index => $val)
-                echo '<th>'.$index.'</th>';
-            
-            echo '</tr><tr>';
+<?php 
 
-            foreach($bd as $index => $val)
-                if($index%2 == 0)
-                    echo '<td>'.$val.'</td>';
-            
-            echo '</tr><tr>';
+    $this->table->set_heading($table_heading);
 
-            foreach($bd as $index => $val)
-                if($index%2 != 0)
-                    echo '<td>'.$val.'</td>';
-            
-            echo '</tr>';
-        ?>
-    </tr>
-</table>
-<br><p><a href = "<?php echo site_url('pages/index') ?>">Index</a></p>
+    foreach($consult as $key => $value)
+    {
+        foreach($value as $val)
+            $colum["{$val}"] = $val; 
+
+        $this->table->add_row($colum);
+        $colum = NULL;
+    }
+    
+    echo $this->table->generate();
+
+?>
+
+<br><p><a href = "<?php echo site_url('pages/index') ?>">Voltar</a></p>
+
+<br><p><a href = "<?php echo site_url('pages/close_session') ?>">Fechar sessao</a></p>
+

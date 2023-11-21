@@ -1,10 +1,13 @@
 <?php
-    function validation($in, $name) {
+    function validation($object, $name) {
 
-        if(!($in->server('REQUEST_METHOD') == 'POST')) 
+        if( ! get_session($object, "{$name}") )
+            session_start();
+
+        if( ! ($object->input->server('REQUEST_METHOD') == 'POST')) 
             show_error('metodo incorreto');
 
-        if(!$in->post($name))
+        if( ! $object->input->post($name))
             show_error($name.' não foi determinada');
 
     }

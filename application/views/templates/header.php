@@ -1,5 +1,5 @@
 <html>
         <head>
-                <title>CodeIgniter Tutorial</title>
+                <?php echo link_tag('public/style.css'); ?>
         </head>
         <body>
