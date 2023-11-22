@@ -43,6 +43,7 @@
 
         public function select_table(){
 
+            $data['type'] = 't';
 
             if( ! get_session($this,'password') OR  ! get_session($this,'email'))
             {
@@ -65,6 +66,8 @@
         }
 
         public function select_line() {
+
+            $data['type'] = 'l';
 
             if( ! get_session($this,'password') OR  ! get_session($this,'email'))
             {
