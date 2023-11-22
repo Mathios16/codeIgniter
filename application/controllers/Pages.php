@@ -20,7 +20,7 @@
 
             if(get_session($this,'password') === TRUE)
             {
-                $this->select_view();
+                $this->select_line();
                 return;
             }
             
@@ -29,14 +29,6 @@
 
             $this->load->view('templates/header');
             $this->load->view('pages/index', $data);
-            $this->load->view('templates/footer');
-
-        }
-
-        public function select_view() {
-
-            $this->load->view('templates/header');
-            $this->load->view('pages/select_view');
             $this->load->view('templates/footer');
 
         }

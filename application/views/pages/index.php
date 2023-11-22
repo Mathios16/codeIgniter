@@ -1,15 +1,22 @@
-<h2><?php echo $title; ?></h2>
+<?php 
+        echo '<h2>'.$title.'</h2><br>';
+        echo form_open('pages/table'); 
 
-<div>
-        <?php 
-        
-                echo form_open('pages/table'); 
+        $data['email'] = array(
+                'name'          => 'email',
+                'placeholder'   => 'email'
+        );
 
-                echo form_input('email','email').'</br>';
-                echo form_password('password','').'</br>';
-        
-                echo form_submit('submit','Login');
-                echo form_close();
+        $data['senha'] = array(
+                'type'          => 'password',
+                'name'          => 'password',
+                'placeholder'   => 'senha',
+        );
 
-        ?>
-</div>
+        echo form_input($data['email']).'</br>';
+        echo form_password($data['senha']).'</br></br>';
+
+        echo form_submit('submit','Login');
+        echo form_close();
+
+?>

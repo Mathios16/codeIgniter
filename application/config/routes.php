@@ -54,3 +54,4 @@ $route['pages/view'] = 'pages/view';
 $route['pages/table'] = 'pages/select_table';
 $route['pages/line'] = 'pages/select_line';
 $route['pages/close'] = 'pages/close_session';
+$route['public'] = 'http://127.0.0.1/new.teste/public';
