@@ -81,7 +81,8 @@
             {
                 if($this->input->post('password') && $this->input->post('email'))
                     $this->validation(array('password', 'email'));
-
+                else
+                    show_error('insira os dados');
 
                 $this->session->set_userdata('id',$this->get_id());
             }
@@ -90,7 +91,7 @@
                                         ->where($this->get_trigrama().'id', $this->session->id)
                                         ->get($this->searchDB())
                                         ->result();
-                             
+                                               
             if (empty($data['consult']))
                 show_error('Senha pode estar errada');
 
@@ -103,7 +104,7 @@
         
         public function close_session() {
 
-            $this->session->unset_userdata('password');
+            $this->session->unset_userdata('id');
             redirect('pages');
 
         }
@@ -121,7 +122,6 @@
         
                 if( ! $this->input->post($name))
                     show_error($name.' não foi determinada');
-                
             }
     
         }
@@ -153,10 +153,14 @@
             $where = array($this->get_trigrama().'email'=> $this->input->post('email'),
                            $this->get_trigrama().'senha'=> $this->input->post('password'));
 
-            return $this->db->select($this->get_trigrama().'id')
-                                        ->where($where)
-                                        ->get($this->searchDB())
-                                        ->result()[0]->tsn_id;
+            $consult = $this->db->select($this->get_trigrama().'id')
+                              ->where($where)
+                              ->get($this->searchDB())
+                              ->result();
+            if (empty($consult))
+                show_error('Senha pode estar errada');
+            
+            return $consult[0]->tsn_id;
 
         }
     }
