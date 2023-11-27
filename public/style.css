@@ -107,7 +107,7 @@ h2{
   background-position: 10px 10px;
 }
 
-.error-email, .error-password{
+.error-email, .error-password, .tempo{
   border-radius: 1ch;
   background-color: white;
   background-position: 10px 10px;

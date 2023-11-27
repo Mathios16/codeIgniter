@@ -23,10 +23,7 @@
 
         echo form_password($data['senha']).'</br>';
         echo '<div class="error-password"></div>';
-
         echo '<br><button type="submit">login</button>';
         echo form_close();
 
 ?>
-
-<script type='text/javascript' src='http://127.0.0.1/new.teste/public/ajax.js'></script>
