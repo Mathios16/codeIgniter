@@ -1,4 +1,6 @@
 function start_timer(end_time){
+
+  $('button[type="submit"]').prop('disabled', true)
   
   var html_error = $('.error-password').html()
   $('.error-password').html(html_error + '<span class="tempo"></span>')
@@ -22,6 +24,7 @@ function start_timer(end_time){
       {
           clearInterval(timer_interval)
           $('.error-password').html('')
+          $('button[type="submit"]').prop('disabled', false)
           return
       }
   

@@ -41,5 +41,5 @@
         }
 
     ?>
-    <button> <a href = "<?php echo site_url('pages/close_session') ?>">Fechar sessao</a></button>
+    <button> <a href = "<?php echo site_url('selects/close_session') ?>">Fechar sessao</a></button>
 </div>

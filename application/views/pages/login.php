@@ -1,7 +1,7 @@
 <?php 
         echo '<h2>'.$title.'</h2><br>';
 
-        echo form_open('pages', array( 'id' => 'login')); 
+        echo form_open('login/index', array( 'id' => 'login')); 
 
         $data['email'] = array(
                 'name'        => 'email',

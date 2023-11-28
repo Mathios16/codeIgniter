@@ -85,7 +85,7 @@ a{
   color: #fff;
 }
 
-input[type=text], input[type=password] {
+input {
   top:50%;
   border: 3px solid #555;
   background-color: white;

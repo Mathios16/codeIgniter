@@ -1,9 +1,8 @@
 
     <?php
+    if(isset($scripts))
         foreach($scripts as $name => $type)
-        {
-            echo '<script type=\''.$type.'\' src=\'http://127.0.0.1/new.teste/public/'.$name.'\'></script>';
-        }
+            echo '<script type=\''.$type.'\' src=\''.site_url('/public/javascript/'.$name).'\'></script>';
     ?>
     </body>
 </html>
