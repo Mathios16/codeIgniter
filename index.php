@@ -35,7 +35,8 @@
  * @since	Version 1.0.0
  * @filesource
  */
-
+	ini_set("date.timezone", "America/Fortaleza");
+	date_default_timezone_set('America/Fortaleza');
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
