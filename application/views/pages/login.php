@@ -1,5 +1,5 @@
 <?php 
-        echo '<h2>'.$title.'</h2><br>';
+        echo '<h2>'.$title.'</h2>';
 
         echo form_open('login', array( 'id' => 'login')); 
 
