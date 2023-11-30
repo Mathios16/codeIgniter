@@ -10,12 +10,13 @@
 
             $this->load->helper(array('form','security'));
 
-            $this->load->library(array('form_validation','javascript','javascript/jquery'));
+            $this->load->library(array('form_validation','javascript','javascript/jquery', 'user_agent'));
 
         }
 
         public function index() 
         {
+            $this->session->unset_userdata('id');
 
             if($this->has_session('id') === TRUE)
             {
@@ -35,18 +36,20 @@
                     $this->output->set_content_type('aplication/json')
                                     ->set_output(
                                     json_encode(
-                                    array('error'=> TRUE,
-                                          'email'=> form_error('email'),
-                                          'password'=> form_error('password'),
-                                          'type' => 'null',
-                                          'csrf_token' => $this->security->get_csrf_hash())));
+                                    array('error'       => TRUE,
+                                          'email'       => form_error('email'),
+                                          'password'    => form_error('password'),
+                                          'type'        => 'null',
+                                          'referrer'    => $this->agent->referrer(),
+                                          'platform'    => $this->agent->platform(),
+                                          'csrf_token'  => $this->security->get_csrf_hash())));
                     return;
 
                 } 
                 else
                 {
 
-                    if($this->get_tempo_espera()-time() < 0 && ! empty($this->get_tempo_espera()))
+                    if($this->get_tempo_espera()-time() <= 0 && ! empty($this->get_tempo_espera()))
                     {
                         $this->reset_tentativas();
                     }
@@ -64,12 +67,14 @@
                         $this->output->set_content_type('aplication/json')
                                         ->set_output(
                                         json_encode(
-                                        array('error'=> TRUE,
-                                              'email'=> '',
-                                              'password'=> 'Tentativas excedidas, aguardar ',
-                                              'type' => 'exedTent',
-                                              'tempo' => $this->get_tempo_espera(),
-                                              'csrf_token' => $this->security->get_csrf_hash())));
+                                        array('error'       => TRUE,
+                                              'email'       => '',
+                                              'password'    => 'Tentativas excedidas, aguardar ',
+                                              'type'        => 'exedTent',
+                                              'tempo'       => $this->get_tempo_espera(),
+                                              'referrer'    => $this->agent->referrer(),
+                                              'platform'    => $this->agent->platform(),
+                                              'csrf_token'  => $this->security->get_csrf_hash())));
                         return;
 
                     }
@@ -80,11 +85,13 @@
                         $this->output->set_content_type('aplication/json')
                                         ->set_output(
                                         json_encode(
-                                        array('error'=> TRUE,
-                                              'email'=> '',
-                                              'password'=> 'Dados incorretos',
-                                              'type' => 'wrongPassword',
-                                              'csrf_token' => $this->security->get_csrf_hash())));
+                                        array('error'       => TRUE,
+                                              'email'       => '',
+                                              'password'    => 'Dados incorretos',
+                                              'type'        => 'wrongPassword',
+                                              'referrer'    => $this->agent->referrer(),
+                                              'platform'    => $this->agent->platform(),
+                                              'csrf_token'  => $this->security->get_csrf_hash())));
                         return;
 
                     } 
@@ -94,25 +101,52 @@
                         $this->output->set_content_type('aplication/json')
                                         ->set_output(
                                         json_encode(
-                                        array('error'=> TRUE,
-                                              'email'=> '',
-                                              'password'=> 'Dados incorretos',
-                                              'type' => 'wrongEmail',
-                                              'csrf_token' => $this->security->get_csrf_hash())));
+                                        array('error'       => TRUE,
+                                              'email'       => '',
+                                              'password'    => 'Dados incorretos',
+                                              'type'        => 'wrongEmail',
+                                              'referrer'    => $this->agent->referrer(),
+                                              'platform'    => $this->agent->platform(),
+                                              'csrf_token'  => $this->security->get_csrf_hash())));
                         return;
 
-                    }   
+                    }
                     else 
                     {
                         
-                        $this->reset_num_esperas();
-                        $this->output->set_content_type('aplication/json')
+                        $this->add_session();
+
+                        if(1>= 3)
+                        {
+
+                            $this->output->set_content_type('aplication/json')
                                         ->set_output(
                                         json_encode(
-                                        array('error'=> FALSE)));
-                        $this->add_session();
-                        $this->session->set_userdata('id',$this->get_key_session());
+                                        array('error'       => TRUE,
+                                              'email'       => '',
+                                              'password'    => 'Usuario em uso',
+                                              'type'        => 'exedSessions',
+                                              'referrer'    => $this->agent->referrer(),
+                                              'platform'    => $this->agent->platform(),
+                                              'csrf_token'  => $this->security->get_csrf_hash())));
+
+                            return;
+
+                        }
+                        else
+                        {
+
+                            $this->reset_num_esperas();
+                            $this->output->set_content_type('aplication/json')
+                                        ->set_output(
+                                        json_encode(
+                                        array('error'    => FALSE,
+                                              'referrer' => $this->agent->referrer(),
+                                              'platform' => $this->agent->platform())));
+                        
                         return;
+
+                        }
 
                     }
                 }
@@ -135,11 +169,15 @@
         }
 
 
-        /*
-        auxiliares
-        */
+        /**************
+         * AUXILIARES *
+         **************/
 
-        public function add_tentativas() 
+
+        /***SETS***/
+
+
+        private function add_tentativas() 
         {
 
             if($this->get_tentativas() === FALSE)
@@ -150,17 +188,30 @@
                      ->update('tentativas');
 
         }
-
-        public function reset_tentativas() 
+        
+        private function add_num_esperas() 
         {
 
-            $this->db->set(array('tnt_num' => 0, 'tnt_tempo' => NULL))
+            $this->db->set('tnt_num_esperas', $this->get_num_esperas()+1)
+                     ->where('tnt_tabela', $this->searchDB())
+                     ->update('tentativas');
+
+        }
+        
+        private function set_tempo_espera() 
+        {
+
+             $this->db->set('tnt_tempo', time()+(30*($this->get_num_esperas())))
                      ->where('tnt_tabela', $this->searchDB())
                      ->update('tentativas');
 
         }
 
-        public function get_tentativas() 
+
+        /***GETS***/
+
+
+        private function get_tentativas() 
         {
 
             $consult = $this->db->select('tnt_num')
@@ -173,26 +224,8 @@
 
             return $consult[0]->tnt_num;
         }
-
-        public function add_num_esperas() 
-        {
-
-            $this->db->set('tnt_num_esperas', $this->get_num_esperas()+1)
-                     ->where('tnt_tabela', $this->searchDB())
-                     ->update('tentativas');
-
-        }
-
-        public function reset_num_esperas() 
-        {
-
-            $this->db->set('tnt_num_esperas', 1)
-                     ->where('tnt_tabela', $this->searchDB())
-                     ->update('tentativas');
-
-        }
-
-        public function get_num_esperas() 
+        
+        private function get_num_esperas() 
         {
 
             $consult = $this->db->select('tnt_num_esperas')
@@ -206,16 +239,7 @@
             return $consult[0]->tnt_num_esperas;
         }
 
-        public function set_tempo_espera() 
-        {
-
-             $this->db->set('tnt_tempo', time()+(30*($this->get_num_esperas())))
-                     ->where('tnt_tabela', $this->searchDB())
-                     ->update('tentativas');
-
-        }
-
-        public function get_tempo_espera() 
+        private function get_tempo_espera() 
         {
 
             $consult = $this->db->select('tnt_tempo')
@@ -232,6 +256,29 @@
             return $consult[0]->tnt_tempo;
         
         }
+
+
+        /***RESETS***/
+
+
+        private function reset_tentativas() 
+        {
+
+            $this->db->set(array('tnt_num' => 0, 'tnt_tempo' => NULL))
+                     ->where('tnt_tabela', $this->searchDB())
+                     ->update('tentativas');
+
+        }
+
+        private function reset_num_esperas() 
+        {
+
+            $this->db->set('tnt_num_esperas', 1)
+                     ->where('tnt_tabela', $this->searchDB())
+                     ->update('tentativas');
+
+        }
+
 
     }
 

@@ -23,9 +23,10 @@
             foreach($data['table_heading'] as $key => $val)
                 $data['table_heading'][$key] = str_replace($this->get_trigrama(), '', $val);
 
-            $data['consult'] = $this->db->select($this->get_parameter())
-                                        ->get($this->searchDB())
-                                        ->result();
+
+            $data['consult'] = $this->data_pagination($this->searchDB(), $this->get_parameter(), $this->uri->segment(3));
+
+            $data['pagination'] = $this->create_pagination(base_url('selects/select_table'), $this->searchDB());
 
             $data['page_title'] = 'table';
 
@@ -44,11 +45,13 @@
             foreach($data['table_heading'] as $key => $val)
                 $data['table_heading'][$key] = str_replace($this->get_trigrama(), '', $val);
 
+            $id = $this->get_sessions('cts_usu_id', $this->session->id);
+
             $data['consult'] = $this->db->select($this->get_parameter())
-                                        ->where($this->get_trigrama().'id', $this->session->id)
+                                        ->where($this->get_trigrama().'id', $id)
                                         ->get($this->searchDB())
                                         ->result();
-
+            
             $data['page_title'] = 'line';
 
             $this->load->view('templates/header', $data);
@@ -57,13 +60,6 @@
 
         }
 
-        public function close_session() 
-        {
-
-            $this->session->unset_userdata('id');
-            redirect('login');
-
-        }
     }
 
 ?>

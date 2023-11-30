@@ -19,6 +19,7 @@ $('html').on('submit', '#login', function (e)
         url: base_url,
         success: function(response) 
         {
+
             if(response.error)
             {
 
@@ -35,11 +36,9 @@ $('html').on('submit', '#login', function (e)
             }
             else
             {
+                console.log('teste')
                 window.location = 'http://127.0.0.1/new.teste/pages/line'
             }
-
-        },
-        
-        
+        }           
     })
 })

@@ -8,11 +8,17 @@
 
             parent::__construct();
 
+            $this->remove_sessions();
+
             $this->load->helper(array('html', 'url_helper','form','security'));
 
-            $this->load->library(array('session','encryption'));
+            $this->load->library(array('session','encryption', 'pagination'));
             
         }
+
+
+        /***BANCO***/
+
 
         protected function searchDB() : String 
         {
@@ -21,21 +27,6 @@
 
             return $nameClass;
 
-        }
-
-        
-        protected function has_session($name) : bool 
-        {
-
-            return ( $this->session->has_userdata($name) != NULL ? TRUE : FALSE );   
-    
-        }
-
-        protected function get_session($name) 
-        {
-
-            return $this->session->has_userdata($name);   
-    
         }
 
         protected function get_parameter() : String 
@@ -55,14 +46,10 @@
 
         }
 
-        protected function verifica_banco($val, $name) : bool 
-        {
-            return (empty($this->db->select($this->get_trigrama().'id')
-                                   ->where($this->get_trigrama().$name, $val)
-                                   ->get($this->searchDB())
-                                   ->result())
-                    ? FALSE : TRUE);
-        }
+
+        /***CONSULTAS BD***/
+
+
         protected function get_id() 
         {
             
@@ -81,28 +68,123 @@
 
         }
 
-        protected function get_key_session() 
+        protected function verifica_banco($val, $name) : bool 
         {
-
-            $consult = $this->db->select('cts_usu_chave')
-                                ->where('cts_usu_id', $this->get_id())
-                                ->get('controle-sessoes')
-                                ->result();
-
-            return $consult[0]->cts_usu_chave;
-
+            return (empty($this->db->select($this->get_trigrama().'id')
+                                   ->where($this->get_trigrama().$name, $val)
+                                   ->get($this->searchDB())
+                                   ->result())
+                    ? FALSE : TRUE);
         }
+
+
+        /***CONSULTAS SESSION***/
+
 
         protected function add_session()
         {
-
+            $id = $this->get_id();
             $this->db->insert('controle_sessoes', 
                         array('cts_id'       => 0,
                               'cts_tabela'   => $this->searchDB(),
-                              'cts_usu_chave'=> $this->encrypt->encode($this->get_id()),
-                              'cts_usu_id'   => $this->get_id(),
-                              'cts_status'   => 'usu'));
+                              'cts_usu_chave'=> $this->encryption->encrypt($id),
+                              'cts_usu_id'   => $id,
+                              'cts_status'   => 'usu',
+                              'cts_tempo'   => time()+7200));
+            $this->session->set_userdata('id', $this->get_last_sessions());
+        }
+        
+        protected function get_sessions($name, $key)
+        {
+            $consult = $this->db->select($name)
+                                ->where('cts_usu_chave', $key)
+                                ->get('controle_sessoes')
+                                ->result();
 
+            if(empty($consult))
+                return FALSE;
+
+            return $consult[0]->$name;
+        }
+
+        protected function get_last_sessions()
+        {
+            $consult = $this->db->select('cts_usu_chave')
+                                ->limit(1)
+                                ->order_by('cts_id','desc')
+                                ->get('controle_sessoes')
+                                ->result();
+
+            if(empty($consult))
+                return FALSE;
+
+            return $consult[0]->cts_usu_chave;
+        }
+
+        protected function get_num_sessions($key) : int
+        {
+
+            $consult = $this->db->select('cts_id')
+                                ->where('cts_usu_chave', $key)
+                                ->get('controle_sessoes')
+                                ->result();
+
+            if(empty($consult))
+                return 0;
+
+            return count($consult);
+
+        }
+
+        protected function remove_sessions()
+        {
+
+            $this->db->where('cts_tempo <=', time())
+                     ->delete('controle_sessoes');
+
+        }
+
+        protected function has_session($name) : bool 
+        {
+
+            return ( $this->session->has_userdata($name) != NULL ? TRUE : FALSE );   
+    
+        }
+
+
+        /***PAGINAÇÃO***/
+
+
+        public function data_pagination($db, $parameters, $page, $num_lines = NULL)
+        {
+
+            if($num_lines === NULL)
+                $num_lines = $this->get_pagination_lines($db);
+
+            return $this->db->select($parameters)
+                            ->limit($num_lines, $page)
+                            ->get($db)
+                            ->result();
+
+        }
+
+        public function create_pagination($base_url, $db)
+        {
+
+            $config = array(
+                'base_url'        => $base_url,
+                'total_rows'      => $this->db->count_all_results($db),
+                'per_page'        => $this->get_pagination_lines($db),
+                'use_page_numbers'=> TRUE,
+                'attributes'      => array('class' => 'pagination')
+            );
+
+            return $this->pagination->initialize($config)->create_links();
+        }
+
+        public function get_pagination_lines($db) : int
+        {
+            return round($this->db->count_all_results($db)/2, 0, PHP_ROUND_HALF_UP);
         }
 
     }
