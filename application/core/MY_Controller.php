@@ -8,11 +8,12 @@
 
             parent::__construct();
 
-            $this->remove_sessions();
-
             $this->load->helper(array('html', 'url_helper','form','security'));
 
             $this->load->library(array('session','encryption', 'pagination'));
+
+
+            $this->remove_sessions();
             
         }
 
@@ -23,7 +24,7 @@
         protected function searchDB() : String 
         {
 
-            $nameClass = 'testesession';
+            $nameClass = 'usuarios';
 
             return $nameClass;
 
@@ -34,7 +35,9 @@
 
             $parameter = $this->get_trigrama().'nome , '
                         .$this->get_trigrama().'email , '
-                        .$this->get_trigrama().'senha';
+                        .$this->get_trigrama().'senha , '
+                        .$this->get_trigrama().'identificador , '
+                        .$this->get_trigrama().'telefone ';
 
             return $parameter;
         }
@@ -42,7 +45,7 @@
         protected function get_trigrama() : String 
         {
 
-            return ' tsn_';
+            return ' usu_';
 
         }
 
@@ -64,7 +67,25 @@
             if (empty($consult))
                 return FALSE;
             
-            return $consult[0]->tsn_id;
+            return $consult[0]->$this->get_trigrama().'id';
+
+        }
+
+        protected function get_usuario($email, $senha, $dado) 
+        {
+            
+            $where = array($this->get_trigrama().'email'=> $email,
+                           $this->get_trigrama().'senha'=> $senha);
+
+            $consult = $this->db->select($this->get_trigrama().$dado)
+                                ->where($where)
+                                ->get($this->searchDB())
+                                ->result();
+
+            if (empty($consult))
+                return FALSE;
+            
+            return $consult[0]->$this->get_trigrama().$dado;
 
         }
 
@@ -88,13 +109,12 @@
                         array('cts_id'       => 0,
                               'cts_tabela'   => $this->searchDB(),
                               'cts_usu_chave'=> $this->encryption->encrypt($id),
-                              'cts_usu_id'   => $id,
                               'cts_status'   => 'usu',
                               'cts_tempo'   => time()+7200));
             $this->session->set_userdata('id', $this->get_last_sessions());
         }
         
-        protected function get_sessions($name, $key)
+        protected function get_session($name, $key)
         {
             $consult = $this->db->select($name)
                                 ->where('cts_usu_chave', $key)
@@ -124,15 +144,24 @@
         protected function get_num_sessions($key) : int
         {
 
-            $consult = $this->db->select('cts_id')
-                                ->where('cts_usu_chave', $key)
+            $count = 0;
+
+            $consult = $this->db->select('cts_usu_chave')
                                 ->get('controle_sessoes')
                                 ->result();
 
             if(empty($consult))
                 return 0;
 
-            return count($consult);
+            foreach($consult as $key => $value)
+            {
+                if($this->encryption->decrypt($value->cts_usu_chave) == $this->encryption->decrypt($key))
+                {
+                    $count++;
+                }
+            }
+
+            return $count;
 
         }
 

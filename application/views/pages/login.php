@@ -1,5 +1,6 @@
 <?php 
-        echo '<h2>'.$title.'</h2>';
+        echo '<div class="container">';
+        echo '<h2>'.$title.'</h2></div><div class="container">';
 
         echo form_open('login', array( 'id' => 'login')); 
 
@@ -25,5 +26,7 @@
         echo '<div class="error-password"></div>';
         echo '<br><button type="submit">login</button>';
         echo form_close();
+
+        echo '</div>';
 
 ?>

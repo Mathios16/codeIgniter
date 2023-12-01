@@ -116,7 +116,7 @@
                         
                         $this->add_session();
 
-                        if(1>= 3)
+                        if($this->get_num_sessions($this->session->id) >= 3)
                         {
 
                             $this->output->set_content_type('aplication/json')

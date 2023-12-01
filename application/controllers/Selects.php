@@ -12,6 +12,13 @@
 
             $this->load->library(array('table','form_validation'));
 
+
+            if($this->has_session('id') === FALSE)
+            {
+                redirect('login/index');
+                return;
+            }
+
         }
 
         public function select_table()
@@ -27,6 +34,8 @@
             $data['consult'] = $this->data_pagination($this->searchDB(), $this->get_parameter(), $this->uri->segment(3));
 
             $data['pagination'] = $this->create_pagination(base_url('selects/select_table'), $this->searchDB());
+
+            $data['total_pages'] = $this->db->count_all_results($this->searchDB());
 
             $data['page_title'] = 'table';
 
@@ -45,7 +54,7 @@
             foreach($data['table_heading'] as $key => $val)
                 $data['table_heading'][$key] = str_replace($this->get_trigrama(), '', $val);
 
-            $id = $this->get_sessions('cts_usu_id', $this->session->id);
+            $id = $this->encryption->decrypt($this->session->id);
 
             $data['consult'] = $this->db->select($this->get_parameter())
                                         ->where($this->get_trigrama().'id', $id)
