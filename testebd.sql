@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 28-Nov-2023 às 16:01
+-- Tempo de geração: 04-Dez-2023 às 16:03
 -- Versão do servidor: 10.4.27-MariaDB
 -- versão do PHP: 7.4.33
 
@@ -30,10 +30,17 @@ SET time_zone = "+00:00";
 CREATE TABLE `controle_sessoes` (
   `cts_id` int(11) NOT NULL,
   `cts_tabela` varchar(40) NOT NULL,
-  `cts_usu_chave` varchar(30) NOT NULL,
-  `cts_usu_id` int(11) NOT NULL,
-  `cts_status` varchar(3) NOT NULL DEFAULT 'usu'
+  `cts_usu_chave` varchar(255) NOT NULL,
+  `cts_status` varchar(3) NOT NULL DEFAULT 'usu',
+  `cts_tempo` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Extraindo dados da tabela `controle_sessoes`
+--
+
+INSERT INTO `controle_sessoes` (`cts_id`, `cts_tabela`, `cts_usu_chave`, `cts_status`, `cts_tempo`) VALUES
+(125, 'usuarios', '668403bcfac32bc3accab54eaa98504f9ceb6aa775cac33116072ee92a74b79001b21c41a69f12b95c54977c8d64c8da7f21145c6667601f830e732b49d9845bnBUErrvkFYaB02IgfXn88T76aTvMcCgB5kLCX3Trix0=', 'usu', 1701708289);
 
 -- --------------------------------------------------------
 
@@ -54,28 +61,30 @@ CREATE TABLE `tentativas` (
 --
 
 INSERT INTO `tentativas` (`tnt_id`, `tnt_num`, `tnt_tabela`, `tnt_tempo`, `tnt_num_esperas`) VALUES
-(1, 2, 'testesession', NULL, 1);
+(2, 1, 'usuarios', NULL, 1);
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `testesession`
+-- Estrutura da tabela `usuarios`
 --
 
-CREATE TABLE `testesession` (
-  `tsn_id` int(11) NOT NULL,
-  `tsn_nome` varchar(50) NOT NULL,
-  `tsn_senha` varchar(30) NOT NULL,
-  `tsn_email` varchar(40) DEFAULT NULL
+CREATE TABLE `usuarios` (
+  `usu_id` int(11) NOT NULL,
+  `usu_nome` varchar(50) NOT NULL,
+  `usu_email` varchar(40) NOT NULL,
+  `usu_senha` varchar(40) NOT NULL,
+  `usu_identificador` varchar(15) NOT NULL,
+  `usu_telefone` varchar(14) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 --
--- Extraindo dados da tabela `testesession`
+-- Extraindo dados da tabela `usuarios`
 --
 
-INSERT INTO `testesession` (`tsn_id`, `tsn_nome`, `tsn_senha`, `tsn_email`) VALUES
-(1, 'matheus', '123', 'math@e'),
-(2, 'ma2', '321', 'mat@h');
+INSERT INTO `usuarios` (`usu_id`, `usu_nome`, `usu_email`, `usu_senha`, `usu_identificador`, `usu_telefone`) VALUES
+(1, 'matheus', 'matheussalomao12m@gmail.com', 'Mathios', '47723685823', '+5511946131111'),
+(2, 'Camilla', 'camillasalomao@gmail.com', 'c0311', '466712', '11946131111');
 
 --
 -- Índices para tabelas despejadas
@@ -85,7 +94,8 @@ INSERT INTO `testesession` (`tsn_id`, `tsn_nome`, `tsn_senha`, `tsn_email`) VALU
 -- Índices para tabela `controle_sessoes`
 --
 ALTER TABLE `controle_sessoes`
-  ADD PRIMARY KEY (`cts_id`);
+  ADD PRIMARY KEY (`cts_id`),
+  ADD UNIQUE KEY `cts_usu_chave` (`cts_usu_chave`);
 
 --
 -- Índices para tabela `tentativas`
@@ -94,11 +104,10 @@ ALTER TABLE `tentativas`
   ADD PRIMARY KEY (`tnt_id`);
 
 --
--- Índices para tabela `testesession`
+-- Índices para tabela `usuarios`
 --
-ALTER TABLE `testesession`
-  ADD PRIMARY KEY (`tsn_id`),
-  ADD UNIQUE KEY `tsn_senha` (`tsn_senha`);
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`usu_id`);
 
 --
 -- AUTO_INCREMENT de tabelas despejadas
@@ -108,19 +117,19 @@ ALTER TABLE `testesession`
 -- AUTO_INCREMENT de tabela `controle_sessoes`
 --
 ALTER TABLE `controle_sessoes`
-  MODIFY `cts_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `cts_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
 
 --
 -- AUTO_INCREMENT de tabela `tentativas`
 --
 ALTER TABLE `tentativas`
-  MODIFY `tnt_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `tnt_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT de tabela `testesession`
+-- AUTO_INCREMENT de tabela `usuarios`
 --
-ALTER TABLE `testesession`
-  MODIFY `tsn_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `usuarios`
+  MODIFY `usu_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
