@@ -1,29 +1,7 @@
 <?php 
 
-    echo '<div class="topnav">';
-    if($type === 't')
-    {
-        echo '<br><a  href = ';
-        echo site_url('pages/line');
-        echo '>Seus dados</a>';
+    echo $topnav;
 
-        echo '<br><a class="active" href = ';
-        echo site_url('pages/table');
-        echo '>Todos os dados</a>';
-    }
-    else
-    {
-        echo '<br><a class="active" href = ';
-        echo site_url('pages/line');
-        echo '>Seus dados</a>';
-
-        echo '<br><a href = ';
-        echo site_url('pages/table');
-        echo '>Todos os dados</a>';
-    }
-
-    echo '<a href = '.site_url('logout/close_session').'>Fechar sessão</a>';
-    echo '</div>';
     echo '</br><div class="container">';
     $this->table->set_heading($table_heading);
 

@@ -51,6 +51,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $route['login'] = 'login/index';
 $route['pages/table'] = 'selects/select_table/1';
-$route['pages/table/(:num)'] = 'selects/select_table/$1';
+$route['pages/table/(:num)'] = 'selects/select_table';
 $route['pages/line'] = 'selects/select_line';
+$route['insert'] = 'insert';
 $route['pages/close'] = 'logout/close_session';

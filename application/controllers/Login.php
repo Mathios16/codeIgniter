@@ -16,7 +16,6 @@
 
         public function index() 
         {
-            $this->session->unset_userdata('id');
 
             if($this->has_session('id') === TRUE)
             {
@@ -154,7 +153,7 @@
 
             $data['scripts'] = array(
                 'jquery-3.7.1.min.js' => 'text/javascript',
-                'ajax.js' => 'text/javascript',
+                'ajax_login.js' => 'text/javascript',
                 'timer.js' => 'text/javascript'
             );
             
@@ -179,9 +178,6 @@
 
         private function add_tentativas() 
         {
-
-            if($this->get_tentativas() === FALSE)
-                $this->db->insert('tentativas', array('tnt_id' => 0, 'tnt_num' => 0, 'tnt_tabela' => $this->searchDB()));
 
             $this->db->set('tnt_num', $this->get_tentativas()+1)
                      ->where('tnt_tabela', $this->searchDB())
@@ -241,6 +237,8 @@
 
         private function get_tempo_espera() 
         {
+            if($this->get_tentativas() === FALSE)
+                $this->db->insert('tentativas', array('tnt_id' => 0, 'tnt_num' => 0, 'tnt_tabela' => $this->searchDB()));
 
             $consult = $this->db->select('tnt_tempo')
                                 ->where('tnt_tabela', $this->searchDB())

@@ -9,6 +9,7 @@ $('html').on('submit', '#login', function (e)
     var base_url = 'http://127.0.0.1/new.teste/login'
 
 
+
    $.ajax({
         cache: false,
         contentType: false,
@@ -19,7 +20,6 @@ $('html').on('submit', '#login', function (e)
         url: base_url,
         success: function(response) 
         {
-
             if(response.error)
             {
 
@@ -36,7 +36,6 @@ $('html').on('submit', '#login', function (e)
             }
             else
             {
-                console.log('teste')
                 window.location = 'http://127.0.0.1/new.teste/pages/line'
             }
         }           

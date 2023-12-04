@@ -50,14 +50,37 @@
         }
 
 
+        
+        /***INSERSÕES BD***/
+
+
+        protected function add_usuario()
+        {
+
+            $values = array(
+                $this->get_trigrama().'nome'         => $this->input->post('name'),
+                $this->get_trigrama().'email'        => $this->input->post('email'),
+                $this->get_trigrama().'senha'        => $this->input->post('password'),
+                $this->get_trigrama().'identificador'=> $this->input->post('identifier'),
+                $this->get_trigrama().'telefone'     => $this->input->post('phone'),
+            );
+
+
+            $this->db->insert($this->searchDB(), $values);
+        }
+
+
+
         /***CONSULTAS BD***/
 
 
         protected function get_id() 
         {
             
-            $where = array($this->get_trigrama().'email'=> $this->input->post('email'),
-                           $this->get_trigrama().'senha'=> $this->input->post('password'));
+            $where = array(
+                $this->get_trigrama().'email'=> $this->input->post('email'),
+                $this->get_trigrama().'senha'=> $this->input->post('password')
+            );
 
             $consult = $this->db->select($this->get_trigrama().'id')
                                 ->where($where)
@@ -67,7 +90,7 @@
             if (empty($consult))
                 return FALSE;
             
-            return $consult[0]->$this->get_trigrama().'id';
+            return $consult[0]->usu_id;
 
         }
 
@@ -77,7 +100,7 @@
             $where = array($this->get_trigrama().'email'=> $email,
                            $this->get_trigrama().'senha'=> $senha);
 
-            $consult = $this->db->select($this->get_trigrama().$dado)
+            $consult = $this->db->select($dado)
                                 ->where($where)
                                 ->get($this->searchDB())
                                 ->result();
@@ -85,7 +108,7 @@
             if (empty($consult))
                 return FALSE;
             
-            return $consult[0]->$this->get_trigrama().$dado;
+            return $consult[0]->$dado;
 
         }
 
@@ -214,6 +237,63 @@
         public function get_pagination_lines($db) : int
         {
             return round($this->db->count_all_results($db)/2, 0, PHP_ROUND_HALF_UP);
+        }
+
+
+        /***NAVEGAÇÃO SUPERIOR***/
+        public function create_topnav($type)
+        {
+
+            $html = "<div class='topnav'>";
+            
+            if($type == 't')
+            {
+                $html .= "<br><a  href = ";
+                $html .= site_url('pages/line');
+                $html .= ">Seus dados</a>";
+
+                $html .= "<br><a class='active' href = ";
+                $html .= site_url('pages/table');
+                $html .= ">Todos os dados</a>";
+
+                $html .= "<br><a href = ";
+                $html .= site_url('insert');
+                $html .= ">Inserir dados</a>";
+            }
+            else if($type == 'l')
+            {
+                $html .= "<br><a class='active' href = '";
+                $html .= site_url('pages/line');
+                $html .= "'>Seus dados</a>";
+
+                $html .= "<br><a href = ";
+                $html .= site_url('pages/table');
+                $html .= ">Todos os dados</a>";
+
+                $html .= "<br><a href = ";
+                $html .= site_url('insert');
+                $html .= ">Inserir dados</a>";
+            }else if($type == 'i')
+            {
+                $html .= "<br><a href = ";
+                $html .= site_url('pages/line');
+                $html .= ">Seus dados</a>";
+
+                $html .= "<br><a href = ";
+                $html .= site_url('pages/table');
+                $html .= ">Todos os dados</a>";
+
+                $html .= "<br><a class='active' href = ";
+                $html .= site_url('insert');
+                $html .= ">Inserir dados</a>";
+            }
+            
+
+            $html .= "<a href = ".site_url('logout/close_session').">Fechar sessão</a>";
+            $html .= "</div>";
+
+            return $html;
+
         }
 
     }

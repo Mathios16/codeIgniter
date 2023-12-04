@@ -8,7 +8,7 @@
 
             parent::__construct();
 
-            $this->load->helper(array('html', 'url_helper','form','security'));
+            $this->load->helper(array('html','form','security'));
 
             $this->load->library(array('table','form_validation'));
 
@@ -25,6 +25,8 @@
         {
 
             $data['type'] = 't';
+            $data['topnav'] = $this->create_topnav('t');
+
 
             $data['table_heading'] = explode(",", $this->get_parameter());
             foreach($data['table_heading'] as $key => $val)
@@ -33,7 +35,11 @@
 
             $data['consult'] = $this->data_pagination($this->searchDB(), $this->get_parameter(), $this->uri->segment(3));
 
+            print_r($data['consult']);
+
             $data['pagination'] = $this->create_pagination(base_url('selects/select_table'), $this->searchDB());
+
+            print_r(round($this->db->count_all_results($this->searchDB())/2, 0, PHP_ROUND_HALF_UP));
 
             $data['total_pages'] = $this->db->count_all_results($this->searchDB());
 
@@ -49,6 +55,7 @@
         {
 
             $data['type'] = 'l';
+            $data['topnav'] = $this->create_topnav('l');
 
             $data['table_heading'] = explode(",", $this->get_parameter());
             foreach($data['table_heading'] as $key => $val)
