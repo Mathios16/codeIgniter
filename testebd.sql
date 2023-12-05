@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 04-Dez-2023 às 16:03
+-- Tempo de geração: 05-Dez-2023 às 16:02
 -- Versão do servidor: 10.4.27-MariaDB
 -- versão do PHP: 7.4.33
 
@@ -40,7 +40,7 @@ CREATE TABLE `controle_sessoes` (
 --
 
 INSERT INTO `controle_sessoes` (`cts_id`, `cts_tabela`, `cts_usu_chave`, `cts_status`, `cts_tempo`) VALUES
-(125, 'usuarios', '668403bcfac32bc3accab54eaa98504f9ceb6aa775cac33116072ee92a74b79001b21c41a69f12b95c54977c8d64c8da7f21145c6667601f830e732b49d9845bnBUErrvkFYaB02IgfXn88T76aTvMcCgB5kLCX3Trix0=', 'usu', 1701708289);
+(129, 'usuarios', 'cd2a0803e6a4fb1afae0c01d3a9330e3494ca058fe81a366d9bf5d4eb49c575b5e7f38fb6900f0a8b93469cd33ec153f891ccd351c2aa8de261f29cfba3964a0wYMQjLpurOZN2f5mGKBS5G0CuxKJN9hqNKEWqLJQUyA=', 'usu', 1701791388);
 
 -- --------------------------------------------------------
 
@@ -61,7 +61,7 @@ CREATE TABLE `tentativas` (
 --
 
 INSERT INTO `tentativas` (`tnt_id`, `tnt_num`, `tnt_tabela`, `tnt_tempo`, `tnt_num_esperas`) VALUES
-(2, 1, 'usuarios', NULL, 1);
+(2, 2, 'usuarios', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -75,6 +75,7 @@ CREATE TABLE `usuarios` (
   `usu_email` varchar(40) NOT NULL,
   `usu_senha` varchar(40) NOT NULL,
   `usu_identificador` varchar(15) NOT NULL,
+  `usu_tp_identificador` varchar(4) DEFAULT NULL,
   `usu_telefone` varchar(14) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -82,9 +83,12 @@ CREATE TABLE `usuarios` (
 -- Extraindo dados da tabela `usuarios`
 --
 
-INSERT INTO `usuarios` (`usu_id`, `usu_nome`, `usu_email`, `usu_senha`, `usu_identificador`, `usu_telefone`) VALUES
-(1, 'matheus', 'matheussalomao12m@gmail.com', 'Mathios', '47723685823', '+5511946131111'),
-(2, 'Camilla', 'camillasalomao@gmail.com', 'c0311', '466712', '11946131111');
+INSERT INTO `usuarios` (`usu_id`, `usu_nome`, `usu_email`, `usu_senha`, `usu_identificador`, `usu_tp_identificador`, `usu_telefone`) VALUES
+(1, 'matheus', 'matheussalomao12m@gmail.com', 'Mathios', '477236858', 'cpf', '+5511946131111'),
+(2, 'Camilla', 'camillasalomao@gmail.com', 'c0311', '466712', 'cpf', '11946131111'),
+(8, 'teste', 'teste@outlook.com', '321', '321', 'cpf', '321'),
+(9, 'eu', 'eu@gmail.com', '123', '123', 'cnpj', '123'),
+(10, '1', '1@fatec.sp.gov.br', '1', '111.111.111/111', 'cnpj', '+11 (11) 11111');
 
 --
 -- Índices para tabelas despejadas
@@ -117,7 +121,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de tabela `controle_sessoes`
 --
 ALTER TABLE `controle_sessoes`
-  MODIFY `cts_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
+  MODIFY `cts_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
 
 --
 -- AUTO_INCREMENT de tabela `tentativas`
@@ -129,7 +133,7 @@ ALTER TABLE `tentativas`
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `usu_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `usu_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
