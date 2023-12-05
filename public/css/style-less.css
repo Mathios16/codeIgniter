@@ -3,7 +3,7 @@ body {
   font-size: 14px;
   margin: 0;
   padding: 0;
-  background: linear-gradient(#d6d6d6, #fff9e1b2, #fff9e1b2);
+  background: linear-gradient(#c2c2c2, #ece1c2, #f1e9c6b2);
   background-color: white;
   opacity: 0.999;
 }
@@ -11,9 +11,18 @@ body {
   display: flex;
   align-items: center;
   place-content: center center;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 10px;
+  margin-right: 10px;
   padding: 10px 30px;
+}
+.container .container-item {
+  display: flex;
+  flex: 3 3;
+}
+form {
+  width: 50%;
+  padding: 0;
+  margin: 0;
 }
 table {
   width: 70%;
@@ -66,7 +75,7 @@ td {
 }
 .topnav .active {
   color: black;
-  background-color: #ddd;
+  background-color: #cac8c2;
 }
 button {
   padding: 7px;
@@ -81,7 +90,7 @@ button:hover {
 input {
   width: 100%;
   padding: 12px 30px;
-  margin: 8px 0;
+  margin: 8px 10px;
   display: inline-block;
   box-sizing: border-box;
   border: 1px solid #ccc;
@@ -91,8 +100,8 @@ input {
 }
 input[type="radio"] {
   padding: 0;
-  margin: 0;
-  width: 10%;
+  margin: 6px 2px;
+  width: 25%;
 }
 h2 {
   padding: 10px 10px;
@@ -107,6 +116,7 @@ h2 {
 .error-phone,
 .error-identifier,
 .tempo {
+  flex: none;
   border-radius: 1ch;
   background-color: rgba(241, 237, 218, 0.699);
   background-position: 10px 10px;
@@ -132,7 +142,7 @@ h2 {
   text-align: center;
   text-decoration: none;
   color: #0c0c0c;
-  background-color: #d6d6d6;
+  background-color: #c2c2c2;
 }
 .pagination:hover {
   color: #444444;
@@ -141,4 +151,10 @@ h2 {
 }
 label {
   font: 1rem 'Fira Sans', sans-serif;
+}
+fieldset {
+  width: 39%;
+  margin: 0 10px;
+  padding: 7px 28px;
+  flex: none;
 }

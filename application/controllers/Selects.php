@@ -35,11 +35,7 @@
 
             $data['consult'] = $this->data_pagination($this->searchDB(), $this->get_parameter(), $this->uri->segment(3));
 
-            print_r($data['consult']);
-
             $data['pagination'] = $this->create_pagination(base_url('selects/select_table'), $this->searchDB());
-
-            print_r(round($this->db->count_all_results($this->searchDB())/2, 0, PHP_ROUND_HALF_UP));
 
             $data['total_pages'] = $this->db->count_all_results($this->searchDB());
 
@@ -61,12 +57,7 @@
             foreach($data['table_heading'] as $key => $val)
                 $data['table_heading'][$key] = str_replace($this->get_trigrama(), '', $val);
 
-            $id = $this->encryption->decrypt($this->session->id);
-
-            $data['consult'] = $this->db->select($this->get_parameter())
-                                        ->where($this->get_trigrama().'id', $id)
-                                        ->get($this->searchDB())
-                                        ->result();
+            $data['consult'] = $this->get_usuario();
             
             $data['page_title'] = 'line';
 

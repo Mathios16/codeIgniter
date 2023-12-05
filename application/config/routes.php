@@ -54,4 +54,5 @@ $route['pages/table'] = 'selects/select_table/1';
 $route['pages/table/(:num)'] = 'selects/select_table';
 $route['pages/line'] = 'selects/select_line';
 $route['insert'] = 'insert';
+$routes['update'] = 'update';
 $route['pages/close'] = 'logout/close_session';

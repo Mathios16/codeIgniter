@@ -18,7 +18,9 @@
         }
 
 
-        /***BANCO***/
+        /*********
+         * BANCO *
+         *********/
 
 
         protected function searchDB() : String 
@@ -37,6 +39,7 @@
                         .$this->get_trigrama().'email , '
                         .$this->get_trigrama().'senha , '
                         .$this->get_trigrama().'identificador , '
+                        .$this->get_trigrama().'tp_identificador , '
                         .$this->get_trigrama().'telefone ';
 
             return $parameter;
@@ -51,30 +54,43 @@
 
 
         
-        /***INSERSÕES BD***/
+        /****************
+         * INSERSÕES BD *
+         ****************/
 
 
         protected function add_usuario()
         {
 
             $values = array(
-                $this->get_trigrama().'nome'         => $this->input->post('name'),
-                $this->get_trigrama().'email'        => $this->input->post('email'),
-                $this->get_trigrama().'senha'        => $this->input->post('password'),
-                $this->get_trigrama().'identificador'=> $this->input->post('identifier'),
-                $this->get_trigrama().'telefone'     => $this->input->post('phone'),
+                $this->get_trigrama().'nome'            => $this->input->post('name'),
+                $this->get_trigrama().'email'           => $this->input->post('email'),
+                $this->get_trigrama().'senha'           => $this->input->post('password'),
+                $this->get_trigrama().'identificador'   => $this->input->post('identifier'),
+                $this->get_trigrama().'tp_identificador'=> $this->input->post('tipo_pessoa'),
+                $this->get_trigrama().'telefone'        => $this->input->post('phone'),
             );
 
 
             $this->db->insert($this->searchDB(), $values);
         }
 
+        protected function update_usuario($attr, $value, $id)
+        {
+
+            $this->db->set($attr, $value)
+                     ->where($this->get_trigrama().'id', $this->get_id())
+                     ->update($this->searchDB());
+
+        }
 
 
-        /***CONSULTAS BD***/
+        /****************
+         * CONSULTAS BD *
+         ****************/
 
 
-        protected function get_id() 
+        protected function get_id_post() 
         {
             
             $where = array(
@@ -94,21 +110,25 @@
 
         }
 
-        protected function get_usuario($email, $senha, $dado) 
+        protected function get_id()
+        {
+            return $this->encryption->decrypt($this->session->id);
+        }
+
+        protected function get_usuario() 
         {
             
-            $where = array($this->get_trigrama().'email'=> $email,
-                           $this->get_trigrama().'senha'=> $senha);
+            $id = $this->get_id();
 
-            $consult = $this->db->select($dado)
-                                ->where($where)
-                                ->get($this->searchDB())
-                                ->result();
+            $consult = $this->db->select($this->get_parameter())
+                                        ->where($this->get_trigrama().'id', $id)
+                                        ->get($this->searchDB())
+                                        ->result();
 
             if (empty($consult))
                 return FALSE;
             
-            return $consult[0]->$dado;
+            return $consult[0];
 
         }
 
@@ -122,12 +142,15 @@
         }
 
 
-        /***CONSULTAS SESSION***/
+
+        /*********************
+         * CONSULTAS SESSION *
+         *********************/
 
 
         protected function add_session()
         {
-            $id = $this->get_id();
+            $id = $this->get_id_post();
             $this->db->insert('controle_sessoes', 
                         array('cts_id'       => 0,
                               'cts_tabela'   => $this->searchDB(),
@@ -204,7 +227,10 @@
         }
 
 
-        /***PAGINAÇÃO***/
+
+        /*************
+         * PAGINAÇÃO *
+         *************/
 
 
         public function data_pagination($db, $parameters, $page, $num_lines = NULL)
@@ -240,7 +266,11 @@
         }
 
 
-        /***NAVEGAÇÃO SUPERIOR***/
+        /**********************
+         * NAVEGAÇÃO SUPERIOR *
+         **********************/
+
+
         public function create_topnav($type)
         {
 
@@ -259,6 +289,10 @@
                 $html .= "<br><a href = ";
                 $html .= site_url('insert');
                 $html .= ">Inserir dados</a>";
+
+                $html .= "<br><a href = ";
+                $html .= site_url('update');
+                $html .= ">Atualizar dados</a>";
             }
             else if($type == 'l')
             {
@@ -273,7 +307,12 @@
                 $html .= "<br><a href = ";
                 $html .= site_url('insert');
                 $html .= ">Inserir dados</a>";
-            }else if($type == 'i')
+
+                $html .= "<br><a href = ";
+                $html .= site_url('update');
+                $html .= ">Atualizar dados</a>";
+            }
+            else if($type == 'i')
             {
                 $html .= "<br><a href = ";
                 $html .= site_url('pages/line');
@@ -286,6 +325,28 @@
                 $html .= "<br><a class='active' href = ";
                 $html .= site_url('insert');
                 $html .= ">Inserir dados</a>";
+
+                $html .= "<br><a href = ";
+                $html .= site_url('update');
+                $html .= ">Atualizar dados</a>";
+            }
+            else if($type == 'u')
+            {
+                $html .= "<br><a href = ";
+                $html .= site_url('pages/line');
+                $html .= ">Seus dados</a>";
+
+                $html .= "<br><a href = ";
+                $html .= site_url('pages/table');
+                $html .= ">Todos os dados</a>";
+
+                $html .= "<br><a href = ";
+                $html .= site_url('insert');
+                $html .= ">Inserir dados</a>";
+
+                $html .= "<br><a class='active' href = ";
+                $html .= site_url('update');
+                $html .= ">Atualizar dados</a>";
             }
             
 

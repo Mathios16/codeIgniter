@@ -19,11 +19,11 @@
             if($this->input->server('REQUEST_METHOD') == 'POST') 
             {
 
-                $this->form_validation->set_rules('name','name','required');
+                $this->form_validation->set_rules('name','nome','required');
                 $this->form_validation->set_rules('email','email','required|valid_email');
-                $this->form_validation->set_rules('password','password','required');
-                $this->form_validation->set_rules('identifier','identifier','required');
-                $this->form_validation->set_rules('phone','telephonefone','required');
+                $this->form_validation->set_rules('password','senha','required');
+                $this->form_validation->set_rules('identifier','tipo pessoa','required');
+                $this->form_validation->set_rules('phone','telefone','required');
 
                 if( ! $this->form_validation->run())
                 {
@@ -32,11 +32,11 @@
                                     ->set_output(
                                     json_encode(
                                     array('error'       => TRUE,
-                                          'name'=> form_error('name'),
+                                          'name'        => form_error('name'),
                                           'email'       => form_error('email'),
                                           'password'    => form_error('password'),
-                                          'identifier'=> form_error('identifier'),
-                                          'phone'=> form_error('phone'),
+                                          'identifier'  => form_error('identifier'),
+                                          'phone'       => form_error('phone'),
                                           'type'        => 'null',
                                           'referrer'    => $this->agent->referrer(),
                                           'platform'    => $this->agent->platform(),
@@ -46,7 +46,7 @@
                 } 
                 else
                 {
-
+                    if(preg_match($this->input->post('phone')) > 13)
                     $this->add_usuario();
                     $this->output->set_content_type('aplication/json')
                                 ->set_output(
@@ -61,16 +61,17 @@
             }
 
             $data['scripts'] = array(
-                'jquery-3.7.1.min.js' => 'text/javascript',
-                'ajax_insert.js' => 'text/javascript',
-                'timer.js' => 'text/javascript'
+                'jquery/jquery-3.7.1.min.js'=> 'text/javascript',
+                'jquery/jquery.mask.min.js' => 'text/javascript',
+                'ajax_insert.js'            => 'text/javascript',
+                'ajax_mask.js'              => 'text/javascript'
             );
 
             $data['topnav'] = $this->create_topnav('i');
             
             $data['title'] = 'Insersão de Dados';
 
-            $data['page_title'] = 'page';
+            $data['page_title'] = 'inserir';
 
             $this->load->view('templates/header', $data);
             $this->load->view('pages/insert');

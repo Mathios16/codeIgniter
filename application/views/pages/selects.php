@@ -4,16 +4,32 @@
 
     echo '</br><div class="container">';
     $this->table->set_heading($table_heading);
-
-    foreach($consult as $key => $value)
+    if(gettype($consult) == 'array')
     {
-        foreach($value as $val)
+        foreach($consult as $key => $value)
         {
-            $colum[$val] = $val; 
+            $i = 0;
+            foreach($value as $val)
+            {
+                $colum[$table_heading[$i]] = $val; 
+                $i++;
+            }
+            $this->table->add_row($colum);
+            $colum = NULL;
+        }
+    }
+    else
+    {
+        $i = 0;
+        foreach($consult as $val)
+        {
+            $colum[$table_heading[$i]] = $val;
+            $i++; 
         }
         $this->table->add_row($colum);
         $colum = NULL;
     }
+    
 
     $template = array(
                         'table_open'=> '<table>',
@@ -32,12 +48,9 @@
 
     echo '</div>';
 
-    if( $type === 't'){
-
-        echo '<div class="pagination-flex">';
-
-        echo $pagination.'</div>';
-
-    }
+    if($type == 't')
+    {
+        echo '<div class="pagination-flex">'.$pagination.'</div>';
+    } 
 
 ?>

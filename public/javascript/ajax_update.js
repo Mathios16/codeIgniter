@@ -1,31 +1,11 @@
-$('html').on('click', 'input[name="tipo_pessoa"]', function ()
-{
-    console.log($(this).val())
-
-    if($(this).val() == 'cpf')
-    {
-        $('input[name="identifier"]').attr('type', 'text')
-        $('input[name="identifier"]').attr('placeholder', 'cpf')
-        $('input[name="identifier"]').mask('000.000.000-00')
-    }
-    else
-    {
-        $('input[name="identifier"]').attr('type', 'text')
-        $('input[name="identifier"]').attr('placeholder', 'cnpj')
-        $('input[name="identifier"]').mask('000.000.000/0000-00')
-    }
-
-})
-
-
-$('html').on('submit', '#insert', function (e)
+$('html').on('submit', '#update', function (e)
 {
     e.preventDefault();
 
     var form_content = $(this)[0]
     var formData = new FormData(form_content)
 
-    var base_url = 'http://127.0.0.1/new.teste/insert'
+    var base_url = 'http://127.0.0.1/new.teste/update'
 
    $.ajax({
         cache: false,
@@ -51,7 +31,7 @@ $('html').on('submit', '#insert', function (e)
             }
             else
             {
-                window.location = 'http://127.0.0.1/new.teste/pages/table'
+                window.location = 'http://127.0.0.1/new.teste/pages/line'
             }
         }           
     })

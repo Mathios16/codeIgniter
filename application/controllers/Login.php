@@ -152,7 +152,7 @@
             }
 
             $data['scripts'] = array(
-                'jquery-3.7.1.min.js' => 'text/javascript',
+                'jquery/jquery-3.7.1.min.js' => 'text/javascript',
                 'ajax_login.js' => 'text/javascript',
                 'timer.js' => 'text/javascript'
             );
