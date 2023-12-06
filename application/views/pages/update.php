@@ -2,7 +2,7 @@
     echo $topnav;
     echo '<div class="container"><h2>'.$title.'</h2></div><div class="container">';
 
-    echo form_open('update', array( 'id' => 'update')); 
+    echo form_open($type, array( 'id' => $type)); 
 
     $data['name'] = array(
         'name'        => 'name',

@@ -1,5 +1,5 @@
 <?php
-    class Update extends MY_Controller 
+    class Update_Line extends MY_Controller 
     {
 
         public function __construct() 
@@ -46,31 +46,31 @@
                 } 
                 else
                 {
-                    $original = $this->get_usuario_session();
+                    $original = $this->get_usuario($this->uri->segment(3));
                     
                     if( $this->input->post('name') != $original->usu_nome)
                     {
-                        $this->update_usuario($this->get_trigrama().'nome', $this->input->post('name'), $this->get_id_sesion());
+                        $this->update_usuario($this->get_trigrama().'nome', $this->input->post('name'), $this->uri->segment(2));
                     }
 
                     if( $this->input->post('email') != $original->usu_email)
                     {
-                        $this->update_usuario($this->get_trigrama().'email', $this->input->post('email'), $this->get_id_sesion());
+                        $this->update_usuario($this->get_trigrama().'email', $this->input->post('email'), $this->uri->segment(2));
                     }
 
                     if( $this->input->post('password') != $original->usu_senha)
                     {
-                        $this->update_usuario($this->get_trigrama().'senha', $this->input->post('password'), $this->get_id_sesion());
+                        $this->update_usuario($this->get_trigrama().'senha', $this->input->post('password'), $this->uri->segment(2));
                     }
 
                     if( $this->input->post('phone') != $original->usu_telefone)
                     {
-                        $this->update_usuario($this->get_trigrama().'telefone', $this->input->post('phone'), $this->get_id_sesion());
+                        $this->update_usuario($this->get_trigrama().'telefone', $this->input->post('phone'), $this->uri->segment(2));
                     }
 
                     if( $this->input->post('identifier') != $original->usu_identificador)
                     {
-                        $this->update_usuario($this->get_trigrama().'identificador', $this->input->post('identifier'), $this->get_id_sesion());
+                        $this->update_usuario($this->get_trigrama().'identificador', $this->input->post('identifier'), $this->uri->segment(2));
                     }
 
                     $this->output->set_content_type('aplication/json')
@@ -84,6 +84,7 @@
 
                 }
             }
+            
 
             $data['scripts'] = array(
                 'jquery/jquery-3.7.1.min.js' => 'text/javascript',
@@ -95,11 +96,9 @@
             
             $data['title'] = 'Atualização de Dados';
 
-            $data['page_title'] = 'atualizar';
+            $data['page_title'] = 'atualizar-linha';
 
-            $data['valores'] = $this->get_usuario_session();
-
-            $data['type'] = 'update';
+            $data['type'] = 'update_line';
 
             $this->load->view('templates/header', $data);
             $this->load->view('pages/update');

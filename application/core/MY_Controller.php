@@ -79,7 +79,7 @@
         {
 
             $this->db->set($attr, $value)
-                     ->where($this->get_trigrama().'id', $this->get_id())
+                     ->where($this->get_trigrama().'id', $id)
                      ->update($this->searchDB());
 
         }
@@ -110,20 +110,55 @@
 
         }
 
-        protected function get_id()
+        protected function get_id_sesion()
         {
             return $this->encryption->decrypt($this->session->id);
         }
 
-        protected function get_usuario() 
+        protected function get_id($email, $senha)
+        {
+
+            $where = array(
+                $this->get_trigrama().'email' => $email,
+                $this->get_trigrama().'senha' => $senha,
+            );
+            
+            $consult = $this->db->select($this->get_trigrama().'id')
+                                ->where($where)
+                                ->get($this->searchDB())
+                                ->result();
+
+            if (empty($consult))
+                return FALSE;
+
+            return $consult[0]->usu_id;
+
+        }
+
+        protected function get_usuario_session() 
         {
             
-            $id = $this->get_id();
+            $id = $this->get_id_sesion();
 
             $consult = $this->db->select($this->get_parameter())
                                         ->where($this->get_trigrama().'id', $id)
                                         ->get($this->searchDB())
                                         ->result();
+
+            if (empty($consult))
+                return FALSE;
+            
+            return $consult[0];
+
+        }
+
+        protected function get_usuario($id) 
+        {
+
+            $consult = $this->db->select($this->get_parameter())
+                                ->where($this->get_trigrama().'id', $id)
+                                ->get($this->searchDB())
+                                ->result();
 
             if (empty($consult))
                 return FALSE;

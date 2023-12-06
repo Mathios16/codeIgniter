@@ -1,6 +1,5 @@
 $('html').on('click', 'input[name="tipo_pessoa"]', function ()
 {
-    console.log($(this).val())
 
     if($(this).val() == 'cpf')
     {

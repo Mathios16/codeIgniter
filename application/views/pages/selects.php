@@ -32,16 +32,22 @@
     
 
     $template = array(
-                        'table_open'=> '<table>',
+        'table_open'=> '<table id="table">',
 
-                        'thead_open'=> '<thead class="tbl-header">',
-                        'thead_close'=> '</thead>',
+        'thead_open'=> '<thead class="tbl-header">',
+        'thead_close'=> '</thead>',
 
-                        'tbody_open'=> '<tbody class="tbl-content">',
-                        'tbody_close'=> '</tbody>',
+        'tbody_open'=> '<tbody class="tbl-content">',
+        'tbody_close'=> '</tbody>',
 
-                        'table_close'=> '</table>',
+        'table_close'=> '</table>',
+
+        'row_end'       => '<td><button><a href="'.site_url('update_line').'/'.'"</a>Editar</button></td></tr>',
+        'row_alt_end'   => '<td><button><a href="'.site_url('update_line').'/"</a>Editar</button></td></tr>',
+
     );
+
+    //
     
     $this->table->set_template($template);
     echo $this->table->generate();

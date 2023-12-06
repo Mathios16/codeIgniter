@@ -28,18 +28,24 @@
             $data['topnav'] = $this->create_topnav('t');
 
 
-            $data['table_heading'] = explode(",", $this->get_parameter());
+            $data['table_heading'] = explode(",", 'id,'.$this->get_parameter());
+
             foreach($data['table_heading'] as $key => $val)
+            {
                 $data['table_heading'][$key] = str_replace($this->get_trigrama(), '', $val);
+            }
 
-
-            $data['consult'] = $this->data_pagination($this->searchDB(), $this->get_parameter(), $this->uri->segment(3));
-
+            $data['consult'] = $this->data_pagination($this->searchDB(), $this->get_trigrama().'id,'.$this->get_parameter(), $this->uri->segment(3));
             $data['pagination'] = $this->create_pagination(base_url('selects/select_table'), $this->searchDB());
 
             $data['total_pages'] = $this->db->count_all_results($this->searchDB());
 
             $data['page_title'] = 'table';
+
+            $data['scripts'] = array(
+                'jquery/jquery-3.7.1.min.js' => 'text/javascript',
+                'get_id.js' => 'text/javascript'
+            );
 
             $this->load->view('templates/header', $data);
             $this->load->view('pages/selects');
@@ -57,7 +63,7 @@
             foreach($data['table_heading'] as $key => $val)
                 $data['table_heading'][$key] = str_replace($this->get_trigrama(), '', $val);
 
-            $data['consult'] = $this->get_usuario();
+            $data['consult'] = $this->get_usuario_session();
             
             $data['page_title'] = 'line';
 
