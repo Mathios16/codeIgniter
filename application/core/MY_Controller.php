@@ -14,7 +14,35 @@
 
 
             $this->remove_sessions();
-            
+
+            $adm_only_class = array(
+                ''
+            );
+
+            $adm_only_pages = array(
+                "/update\/\d/",
+                "/pages\/table\/\d/"
+            );
+
+            if($this->get_usuario_acesso($this->get_id_session()) != 'adm')
+            {
+                foreach($adm_only_class as $key)
+                {
+                    if(static::class == $key)
+                    {
+                        redirect('pages/line');
+                        return;
+                    }
+                    foreach($adm_only_pages as $value)
+                    {
+                        if(preg_match($value, $this->uri->uri_string()))
+                        {
+                            redirect('pages/line');
+                            return;
+                        }
+                    }
+                }
+            } 
         }
 
 
@@ -40,7 +68,8 @@
                         .$this->get_trigrama().'senha , '
                         .$this->get_trigrama().'identificador , '
                         .$this->get_trigrama().'tp_identificador , '
-                        .$this->get_trigrama().'telefone ';
+                        .$this->get_trigrama().'telefone , '
+                        .$this->get_trigrama().'cep';
 
             return $parameter;
         }
@@ -69,6 +98,7 @@
                 $this->get_trigrama().'identificador'   => $this->input->post('identifier'),
                 $this->get_trigrama().'tp_identificador'=> $this->input->post('tipo_pessoa'),
                 $this->get_trigrama().'telefone'        => $this->input->post('phone'),
+                $this->get_trigrama().'cep'             => $this->input->post('cep'),
             );
 
 
@@ -110,7 +140,7 @@
 
         }
 
-        protected function get_id_sesion()
+        protected function get_id_session()
         {
             return $this->encryption->decrypt($this->session->id);
         }
@@ -138,7 +168,7 @@
         protected function get_usuario_session() 
         {
             
-            $id = $this->get_id_sesion();
+            $id = $this->get_id_session();
 
             $consult = $this->db->select($this->get_parameter())
                                         ->where($this->get_trigrama().'id', $id)
@@ -167,6 +197,21 @@
 
         }
 
+        protected function get_usuario_acesso($id) 
+        {
+
+            $consult = $this->db->select($this->get_trigrama().'acesso')
+                                ->where($this->get_trigrama().'id', $id)
+                                ->get($this->searchDB())
+                                ->result();
+
+            if (empty($consult))
+                return FALSE;
+            
+            return $consult[0]->usu_acesso;
+
+        }
+
         protected function verifica_banco($val, $name) : bool 
         {
             return (empty($this->db->select($this->get_trigrama().'id')
@@ -190,7 +235,6 @@
                         array('cts_id'       => 0,
                               'cts_tabela'   => $this->searchDB(),
                               'cts_usu_chave'=> $this->encryption->encrypt($id),
-                              'cts_status'   => 'usu',
                               'cts_tempo'   => time()+7200));
             $this->session->set_userdata('id', $this->get_last_sessions());
         }
@@ -311,85 +355,56 @@
 
             $html = "<div class='topnav'>";
             
-            if($type == 't')
+            $active = FALSE;
+            for($i = 0; $i < 4; $i++)
             {
-                $html .= "<br><a  href = ";
-                $html .= site_url('pages/line');
-                $html .= ">Seus dados</a>";
-
-                $html .= "<br><a class='active' href = ";
-                $html .= site_url('pages/table');
-                $html .= ">Todos os dados</a>";
-
-                $html .= "<br><a href = ";
-                $html .= site_url('insert');
-                $html .= ">Inserir dados</a>";
-
-                $html .= "<br><a href = ";
-                $html .= site_url('update');
-                $html .= ">Atualizar dados</a>";
+                switch($type)
+                {
+                    case 'l': if($i == 0) $active = TRUE; break;
+                    case 't': if($i == 1) $active = TRUE; break;
+                    case 'i': if($i == 2) $active = TRUE; break;
+                    case 'u': if($i == 3) $active = TRUE; break;
+                };
+                if($this->get_usuario_acesso($this->get_id_session()) == 'adm')
+                {
+                    switch($i)
+                    {
+                        case 0: $html .= $this->create_topnav_item('pages/line', 'Seus Dados', $active); break;
+                        case 1: $html .= $this->create_topnav_item('pages/table', 'Todos os Dados', $active); break;
+                        case 2: $html .= $this->create_topnav_item('insert', 'Inserir Dados', $active); break;
+                        case 3: $html .= $this->create_topnav_item('update', 'Atualizar Dados', $active); break;
+                    };
+                    $active = FALSE;
+                }
+                else
+                {
+                    switch($i)
+                    {
+                        case 0: $html .= $this->create_topnav_item('pages/line', 'Seus Dados', $active); break;
+                        case 2: $html .= $this->create_topnav_item('insert', 'Inserir Dados', $active); break;
+                        case 3: $html .= $this->create_topnav_item('update', 'Atualizar Dados', $active); break;
+                    };
+                    $active = FALSE;
+                }
             }
-            else if($type == 'l')
-            {
-                $html .= "<br><a class='active' href = '";
-                $html .= site_url('pages/line');
-                $html .= "'>Seus dados</a>";
-
-                $html .= "<br><a href = ";
-                $html .= site_url('pages/table');
-                $html .= ">Todos os dados</a>";
-
-                $html .= "<br><a href = ";
-                $html .= site_url('insert');
-                $html .= ">Inserir dados</a>";
-
-                $html .= "<br><a href = ";
-                $html .= site_url('update');
-                $html .= ">Atualizar dados</a>";
-            }
-            else if($type == 'i')
-            {
-                $html .= "<br><a href = ";
-                $html .= site_url('pages/line');
-                $html .= ">Seus dados</a>";
-
-                $html .= "<br><a href = ";
-                $html .= site_url('pages/table');
-                $html .= ">Todos os dados</a>";
-
-                $html .= "<br><a class='active' href = ";
-                $html .= site_url('insert');
-                $html .= ">Inserir dados</a>";
-
-                $html .= "<br><a href = ";
-                $html .= site_url('update');
-                $html .= ">Atualizar dados</a>";
-            }
-            else if($type == 'u')
-            {
-                $html .= "<br><a href = ";
-                $html .= site_url('pages/line');
-                $html .= ">Seus dados</a>";
-
-                $html .= "<br><a href = ";
-                $html .= site_url('pages/table');
-                $html .= ">Todos os dados</a>";
-
-                $html .= "<br><a href = ";
-                $html .= site_url('insert');
-                $html .= ">Inserir dados</a>";
-
-                $html .= "<br><a class='active' href = ";
-                $html .= site_url('update');
-                $html .= ">Atualizar dados</a>";
-            }
-            
 
             $html .= "<a href = ".site_url('logout/close_session').">Fechar sessão</a>";
             $html .= "</div>";
 
             return $html;
 
+        }
+
+        private function create_topnav_item($url, $nome, $active = FALSE) : string
+        {
+
+            if($active == FALSE)
+                $html = '<br><a href = ';
+            else
+                $html = '<br><a class="active" href = ';
+            $html .= site_url($url);
+            $html .= '>'.$nome.'</a>';
+            return $html;
         }
 
     }

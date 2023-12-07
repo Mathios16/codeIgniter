@@ -42,12 +42,16 @@
 
         'table_close'=> '</table>',
 
-        'row_end'       => '<td><button><a href="'.site_url('update_line').'/'.'"</a>Editar</button></td></tr>',
-        'row_alt_end'   => '<td><button><a href="'.site_url('update_line').'/"</a>Editar</button></td></tr>',
-
     );
 
-    //
+    if($type == 't')
+    {
+        $template = array_merge($template,array(
+            'row_end'       => '<td><button><a href="'.site_url('update').'/'.'">Editar</a></button></td></tr>',
+            'row_alt_end'   => '<td><button><a href="'.site_url('update').'/">Editar</a></button></td></tr>',
+        ));
+    }
+
     
     $this->table->set_template($template);
     echo $this->table->generate();

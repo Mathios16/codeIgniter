@@ -5,7 +5,7 @@ $('html').on('submit', '#update', function (e)
     var form_content = $(this)[0]
     var formData = new FormData(form_content)
 
-    var base_url = 'http://127.0.0.1/new.teste/update'
+    var base_url = $('form[id="update"]').attr('action')
 
    $.ajax({
         cache: false,
