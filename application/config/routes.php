@@ -53,6 +53,7 @@ $route['login'] = 'login/index';
 $route['pages/table'] = 'selects/select_table/1';
 $route['pages/table/(:num)'] = 'selects/select_table';
 $route['pages/line'] = 'selects/select_line';
+$route['pages/cep'] = 'selects/select_dados_cep';
 $route['insert'] = 'insert';
 $route['update'] = 'update';
 $route['update/(:num)'] = 'update';

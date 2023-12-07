@@ -110,7 +110,8 @@
             $data['scripts'] = array(
                 'jquery/jquery-3.7.1.min.js' => 'text/javascript',
                 'jquery/jquery.mask.min.js' => 'text/javascript',
-                'ajax_update.js' => 'text/javascript'
+                'ajax_update.js' => 'text/javascript',
+                'ajax_mask.js' => 'text/javascript'
             );
 
             $data['topnav'] = $this->create_topnav('u');

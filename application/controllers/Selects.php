@@ -32,7 +32,10 @@
 
             foreach($data['table_heading'] as $key => $val)
             {
-                $data['table_heading'][$key] = str_replace($this->get_trigrama(), '', $val);
+                if($key == 5)
+                    $data['table_heading'][$key] = 'tp';
+                else
+                    $data['table_heading'][$key] = str_replace($this->get_trigrama(), '', $val);
             }
 
             $data['consult'] = $this->data_pagination($this->searchDB(), $this->get_trigrama().'id,'.$this->get_parameter(), $this->uri->segment(3));
@@ -61,11 +64,39 @@
 
             $data['table_heading'] = explode(",", $this->get_parameter());
             foreach($data['table_heading'] as $key => $val)
-                $data['table_heading'][$key] = str_replace($this->get_trigrama(), '', $val);
+            {
+                if($key == 4)
+                    $data['table_heading'][$key] = 'tp';
+                else
+                    $data['table_heading'][$key] = str_replace($this->get_trigrama(), '', $val);
+            }
 
             $data['consult'] = $this->get_usuario_session();
             
             $data['page_title'] = 'line';
+
+            $this->load->view('templates/header', $data);
+            $this->load->view('pages/selects');
+            $this->load->view('templates/footer');
+
+        }
+
+        public function select_dados_cep()
+        {
+
+            $data['type'] = 'c';
+            $data['topnav'] = $this->create_topnav('c');
+
+            $data['table_heading'] = array(
+
+            );
+
+            foreach($data['table_heading'] as $key => $val)
+            {
+                $data['table_heading'][$key] = str_replace($this->get_trigrama(), '', $val);
+            }
+            
+            $data['page_title'] = 'cep';
 
             $this->load->view('templates/header', $data);
             $this->load->view('pages/selects');

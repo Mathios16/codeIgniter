@@ -356,7 +356,7 @@
             $html = "<div class='topnav'>";
             
             $active = FALSE;
-            for($i = 0; $i < 4; $i++)
+            for($i = 0; $i < 5; $i++)
             {
                 switch($type)
                 {
@@ -364,31 +364,33 @@
                     case 't': if($i == 1) $active = TRUE; break;
                     case 'i': if($i == 2) $active = TRUE; break;
                     case 'u': if($i == 3) $active = TRUE; break;
+                    case 'c': if($i == 4) $active = TRUE;
                 };
                 if($this->get_usuario_acesso($this->get_id_session()) == 'adm')
                 {
                     switch($i)
                     {
-                        case 0: $html .= $this->create_topnav_item('pages/line', 'Seus Dados', $active); break;
-                        case 1: $html .= $this->create_topnav_item('pages/table', 'Todos os Dados', $active); break;
-                        case 2: $html .= $this->create_topnav_item('insert', 'Inserir Dados', $active); break;
-                        case 3: $html .= $this->create_topnav_item('update', 'Atualizar Dados', $active); break;
+                        case 0: $html .= $this->create_topnav_item('pages/line',    'Seus Dados',       $active); break;
+                        case 1: $html .= $this->create_topnav_item('pages/table',   'Todos Dados',   $active); break;
+                        case 2: $html .= $this->create_topnav_item('insert',        'Inserir Dados',    $active); break;
+                        case 3: $html .= $this->create_topnav_item('update',        'Atualizar Dados',  $active); break;
+                        case 4: $html .= $this->create_topnav_item('pages/cep',     'Ver Endereço',     $active);
                     };
-                    $active = FALSE;
                 }
                 else
                 {
                     switch($i)
                     {
-                        case 0: $html .= $this->create_topnav_item('pages/line', 'Seus Dados', $active); break;
-                        case 2: $html .= $this->create_topnav_item('insert', 'Inserir Dados', $active); break;
-                        case 3: $html .= $this->create_topnav_item('update', 'Atualizar Dados', $active); break;
+                        case 0: $html .= $this->create_topnav_item('pages/line',    'Seus Dados',       $active); break;
+                        case 2: $html .= $this->create_topnav_item('insert',        'Inserir Dados',    $active); break;
+                        case 3: $html .= $this->create_topnav_item('update',        'Atualizar Dados',  $active); break;           
+                        case 4: $html .= $this->create_topnav_item('pages/cep',     'Ver Endereço',     $active);
                     };
-                    $active = FALSE;
                 }
+                $active = FALSE;
             }
 
-            $html .= "<a href = ".site_url('logout/close_session').">Fechar sessão</a>";
+            $html .= "<a href = ".site_url('logout/close_session').">Fechar Sessão</a>";
             $html .= "</div>";
 
             return $html;
