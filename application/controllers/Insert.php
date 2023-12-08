@@ -24,10 +24,10 @@
                 $this->form_validation->set_rules('password','senha','required');
                 $this->form_validation->set_rules('identifier','tipo pessoa','required');
                 $this->form_validation->set_rules('phone','telefone','required');
+                $this->form_validation->set_rules('cep','cep','required');
 
                 if( ! $this->form_validation->run())
                 {
-
                     $this->output->set_content_type('aplication/json')
                                     ->set_output(
                                     json_encode(
@@ -37,6 +37,7 @@
                                           'password'    => form_error('password'),
                                           'identifier'  => form_error('identifier'),
                                           'phone'       => form_error('phone'),
+                                          'cep'         => form_error('cep'),
                                           'type'        => 'null',
                                           'referrer'    => $this->agent->referrer(),
                                           'platform'    => $this->agent->platform(),
@@ -46,7 +47,6 @@
                 } 
                 else
                 {
-                    if(preg_match($this->input->post('phone')) > 13)
                     $this->add_usuario();
                     $this->output->set_content_type('aplication/json')
                                 ->set_output(
@@ -64,7 +64,7 @@
                 'jquery/jquery-3.7.1.min.js'=> 'text/javascript',
                 'jquery/jquery.mask.min.js' => 'text/javascript',
                 'ajax_insert.js'            => 'text/javascript',
-                'ajax_mask.js'              => 'text/javascript'
+                'jquery_mask.js'            => 'text/javascript'
             );
 
             $data['topnav'] = $this->create_topnav('i');

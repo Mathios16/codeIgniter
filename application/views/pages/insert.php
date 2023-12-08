@@ -54,6 +54,30 @@
         'id'          => 'cep'
     );
 
+    $data['logradouro'] = array(
+        'type'        => 'hidden',
+        'name'        => 'logradouro',
+        'id'          => 'logradouro'
+    );
+
+    $data['bairro'] = array(
+        'type'        => 'hidden',
+        'name'        => 'bairro',
+        'id'          => 'bairro'
+    );
+
+    $data['cidade'] = array(
+        'type'        => 'hidden',
+        'name'        => 'cidade',
+        'id'          => 'cidade'
+    );
+
+    $data['estado'] = array(
+        'type'        => 'hidden',
+        'name'        => 'estado',
+        'id'          => 'estado'
+    );
+
     $data['insert'] = array(
         'type' => 'submmit',
         'name' => 'login'
@@ -82,7 +106,15 @@
     echo '<div class="error-identifier"></div></div>';
 
     echo '<div class="container-item">'.form_input($data['cep']);
-    echo '<div class="error-cep"></div></div>';
+    echo '<div class="error-cep"></div>';
+
+    echo form_input($data['logradouro']);
+
+    echo form_input($data['bairro']);
+
+    echo form_input($data['cidade']);
+
+    echo form_input($data['estado']).'</div>';
 
     echo '<br><button type="submit">Inserir</button>';
     echo form_close();

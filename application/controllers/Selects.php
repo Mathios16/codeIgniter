@@ -47,7 +47,7 @@
 
             $data['scripts'] = array(
                 'jquery/jquery-3.7.1.min.js' => 'text/javascript',
-                'get_id.js' => 'text/javascript'
+                'jquery_get_id.js' => 'text/javascript'
             );
 
             $this->load->view('templates/header', $data);
@@ -88,18 +88,24 @@
             $data['topnav'] = $this->create_topnav('c');
 
             $data['table_heading'] = array(
-
+                'cep',
+                'logradouro',
+                'bairro',
+                'localidade',
+                'UF'
             );
 
-            foreach($data['table_heading'] as $key => $val)
-            {
-                $data['table_heading'][$key] = str_replace($this->get_trigrama(), '', $val);
-            }
+            $data['cep'] = $this->get_usuario($this->get_id_session(), $this->get_trigrama().'cep')->usu_cep;
             
             $data['page_title'] = 'cep';
 
+            $data['scripts'] = array(
+                'jquery/jquery-3.7.1.min.js' => 'text/javascript',
+                'jquery_cep.js' => 'text/javascript',
+            );
+
             $this->load->view('templates/header', $data);
-            $this->load->view('pages/selects');
+            $this->load->view('pages/dados_cep');
             $this->load->view('templates/footer');
 
         }

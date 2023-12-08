@@ -1,4 +1,7 @@
 
+    <script type="module">
+        import { Octokit } from "https://esm.sh/@octokit/core";
+    </script>
     <?php
     if(isset($scripts))
         foreach($scripts as $name => $type)

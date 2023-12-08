@@ -24,6 +24,7 @@
                 $this->form_validation->set_rules('password','senha','required');
                 $this->form_validation->set_rules('identifier','identificador','required');
                 $this->form_validation->set_rules('phone','telefone','required');
+                $this->form_validation->set_rules('cep','cep','required');
 
                 if( ! $this->form_validation->run())
                 {
@@ -36,7 +37,7 @@
                                           'email'       => form_error('email'),
                                           'password'    => form_error('password'),
                                           'identifier'  => form_error('identifier'),
-                                          'phone'       => form_error('phone'),
+                                          'cep'       => form_error('cep'),
                                           'type'        => 'null',
                                           'referrer'    => $this->agent->referrer(),
                                           'platform'    => $this->agent->platform(),
@@ -84,6 +85,11 @@
                         $this->update_usuario($this->get_trigrama().'identificador', $this->input->post('identifier'), $id);
                     }
 
+                    if( $this->input->post('cep') != $original->usu_identificador)
+                    {
+                        $this->update_usuario($this->get_trigrama().'cep', $this->input->post('cep'), $id);
+                    }
+
                     $this->output->set_content_type('aplication/json')
                                 ->set_output(
                                 json_encode(
@@ -111,7 +117,7 @@
                 'jquery/jquery-3.7.1.min.js' => 'text/javascript',
                 'jquery/jquery.mask.min.js' => 'text/javascript',
                 'ajax_update.js' => 'text/javascript',
-                'ajax_mask.js' => 'text/javascript'
+                'jquery_mask.js' => 'text/javascript'
             );
 
             $data['topnav'] = $this->create_topnav('u');

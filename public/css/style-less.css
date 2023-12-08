@@ -60,7 +60,8 @@ td {
   margin: 0;
   background-color: #333;
 }
-.topnav a {
+.topnav a,
+.topnav span {
   flex: 0.1;
   float: left;
   padding: 20px 24px;
@@ -69,13 +70,24 @@ td {
   text-decoration: none;
   font-size: 17px;
 }
-.topnav a:hover {
+.topnav a:hover,
+.topnav span:hover {
   color: black;
   background-color: #ddd;
 }
 .topnav .active {
   color: black;
   background-color: #cac8c2;
+}
+.subtopnav {
+  position: relative;
+  display: inline-block;
+}
+.subtopnav-item {
+  display: none;
+}
+.subtopnav:hover .subtopnav-item {
+  display: block;
 }
 button {
   padding: 7px;

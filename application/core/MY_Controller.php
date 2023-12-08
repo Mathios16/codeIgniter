@@ -99,6 +99,10 @@
                 $this->get_trigrama().'tp_identificador'=> $this->input->post('tipo_pessoa'),
                 $this->get_trigrama().'telefone'        => $this->input->post('phone'),
                 $this->get_trigrama().'cep'             => $this->input->post('cep'),
+                $this->get_trigrama().'logradouro'      => $this->input->post('logradouro'),
+                $this->get_trigrama().'bairro'          => $this->input->post('bairro'),
+                $this->get_trigrama().'cidade'          => $this->input->post('cidade'),
+                $this->get_trigrama().'estado'          => $this->input->post('estado'),
             );
 
 
@@ -145,26 +149,6 @@
             return $this->encryption->decrypt($this->session->id);
         }
 
-        protected function get_id($email, $senha)
-        {
-
-            $where = array(
-                $this->get_trigrama().'email' => $email,
-                $this->get_trigrama().'senha' => $senha,
-            );
-            
-            $consult = $this->db->select($this->get_trigrama().'id')
-                                ->where($where)
-                                ->get($this->searchDB())
-                                ->result();
-
-            if (empty($consult))
-                return FALSE;
-
-            return $consult[0]->usu_id;
-
-        }
-
         protected function get_usuario_session() 
         {
             
@@ -182,10 +166,11 @@
 
         }
 
-        protected function get_usuario($id) 
+        protected function get_usuario($id, $attr = NULL) 
         {
-
-            $consult = $this->db->select($this->get_parameter())
+            if ($attr == NULL)
+                $attr = $this->get_parameter();
+            $consult = $this->db->select($attr)
                                 ->where($this->get_trigrama().'id', $id)
                                 ->get($this->searchDB())
                                 ->result();
@@ -352,6 +337,16 @@
 
         public function create_topnav($type)
         {
+            $selects_usu = array(
+                'pages/line' => 'Seus Dados',
+                'pages/cep'=> 'Ver Endereço'
+            );
+
+            $selects_adm = array(
+                'pages/table' => 'Todos Dados',
+                'pages/line' => 'Seus Dados',
+                'pages/cep'=> 'Ver Endereço'
+            );
 
             $html = "<div class='topnav'>";
             
@@ -360,55 +355,68 @@
             {
                 switch($type)
                 {
-                    case 'l': if($i == 0) $active = TRUE; break;
-                    case 't': if($i == 1) $active = TRUE; break;
-                    case 'i': if($i == 2) $active = TRUE; break;
-                    case 'u': if($i == 3) $active = TRUE; break;
-                    case 'c': if($i == 4) $active = TRUE;
+                    case 'l': 
+                    case 't': 
+                    case 'c': if($i == 0) $active = TRUE; break;
+                    case 'i': if($i == 1) $active = TRUE; break;
+                    case 'u': if($i == 2) $active = TRUE;
                 };
                 if($this->get_usuario_acesso($this->get_id_session()) == 'adm')
                 {
                     switch($i)
                     {
-                        case 0: $html .= $this->create_topnav_item('pages/line',    'Seus Dados',       $active); break;
-                        case 1: $html .= $this->create_topnav_item('pages/table',   'Todos Dados',   $active); break;
+                        case 0: $html .= $this->create_subtopnav($selects_adm, 'Dados'); break;
                         case 2: $html .= $this->create_topnav_item('insert',        'Inserir Dados',    $active); break;
                         case 3: $html .= $this->create_topnav_item('update',        'Atualizar Dados',  $active); break;
-                        case 4: $html .= $this->create_topnav_item('pages/cep',     'Ver Endereço',     $active);
                     };
                 }
                 else
                 {
                     switch($i)
                     {
-                        case 0: $html .= $this->create_topnav_item('pages/line',    'Seus Dados',       $active); break;
+                        case 0: $html .= $this->create_subtopnav($selects_usu, 'Dados'); break;
                         case 2: $html .= $this->create_topnav_item('insert',        'Inserir Dados',    $active); break;
-                        case 3: $html .= $this->create_topnav_item('update',        'Atualizar Dados',  $active); break;           
-                        case 4: $html .= $this->create_topnav_item('pages/cep',     'Ver Endereço',     $active);
+                        case 3: $html .= $this->create_topnav_item('update',        'Atualizar Dados',  $active); break;
                     };
                 }
                 $active = FALSE;
             }
 
-            $html .= "<a href = ".site_url('logout/close_session').">Fechar Sessão</a>";
-            $html .= "</div>";
+            $html .= "<a href = ".site_url('logout/close_session').">Fechar Sessão</a></div>";
 
             return $html;
 
         }
 
-        private function create_topnav_item($url, $nome, $active = FALSE) : string
+        private function create_topnav_item($url, $nome, $active = FALSE, $subtopnav = NULL) : string
         {
 
             if($active == FALSE)
                 $html = '<br><a href = ';
             else
                 $html = '<br><a class="active" href = ';
+
             $html .= site_url($url);
-            $html .= '>'.$nome.'</a>';
+
+            $html .= '>'.$nome.$subtopnav.'</a>';
             return $html;
         }
 
+        private function create_subtopnav($array, $title) : string
+        {
+            $html = '<div class="subtopnav">';
+            $html .= '<span>'.$title.'</span>';
+
+            foreach($array as $url => $nome)
+            {
+                $html .= '<br><a class="subtopnav-item" href = ';
+                $html .= site_url($url);
+                $html .= '>'.$nome.'</a>';
+            };
+
+            $html .= '</div>';
+            return $html;
+        }
     }
 
 ?>

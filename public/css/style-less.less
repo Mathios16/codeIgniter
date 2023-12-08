@@ -86,14 +86,14 @@ td
   font-size: 1.2rem;
 }
 
-.topnav 
+.topnav
 {
   display: flex;
   margin: 0;
 
   background-color: #333;
 
-  a
+  a, span
   {
     flex: 0.1;
     float: left;
@@ -118,6 +118,20 @@ td
 
     background-color: #cac8c2;
   }
+}
+
+.subtopnav {
+  position: relative;
+  display: inline-block;
+}
+
+.subtopnav-item {
+  display: none;
+
+}
+
+.subtopnav:hover .subtopnav-item {
+  display: block;
 }
 
 button 
