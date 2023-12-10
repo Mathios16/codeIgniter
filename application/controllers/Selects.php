@@ -33,13 +33,10 @@
                 $data['table_heading'][$key] = str_replace($this->get_trigrama(), '', $val);
 
 
-            $data['consult'] = $this->data_pagination($this->searchDB(), $this->get_parameter(), $this->uri->segment(3));
+            $data['consult'] = $this->data_pagination($this->searchDB(), $this->get_parameter(), $this->uri->segment(3), 2);
 
-            print_r($data['consult']);
 
             $data['pagination'] = $this->create_pagination(base_url('selects/select_table'), $this->searchDB());
-
-            print_r(round($this->db->count_all_results($this->searchDB())/2, 0, PHP_ROUND_HALF_UP));
 
             $data['total_pages'] = $this->db->count_all_results($this->searchDB());
 
