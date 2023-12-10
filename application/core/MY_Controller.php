@@ -14,11 +14,41 @@
 
 
             $this->remove_sessions();
-            
+
+            $adm_only_class = array(
+                ''
+            );
+
+            $adm_only_pages = array(
+                "/update\/\d/",
+                "/pages\/table\/\d/"
+            );
+
+            if($this->get_usuario_acesso($this->get_id_session()) != 'adm')
+            {
+                foreach($adm_only_class as $key)
+                {
+                    if(static::class == $key)
+                    {
+                        redirect('pages/line');
+                        return;
+                    }
+                    foreach($adm_only_pages as $value)
+                    {
+                        if(preg_match($value, $this->uri->uri_string()))
+                        {
+                            redirect('pages/line');
+                            return;
+                        }
+                    }
+                }
+            } 
         }
 
 
-        /***BANCO***/
+        /*********
+         * BANCO *
+         *********/
 
 
         protected function searchDB() : String 
@@ -37,7 +67,9 @@
                         .$this->get_trigrama().'email , '
                         .$this->get_trigrama().'senha , '
                         .$this->get_trigrama().'identificador , '
-                        .$this->get_trigrama().'telefone ';
+                        .$this->get_trigrama().'tp_identificador , '
+                        .$this->get_trigrama().'telefone , '
+                        .$this->get_trigrama().'cep';
 
             return $parameter;
         }
@@ -51,30 +83,48 @@
 
 
         
-        /***INSERSÕES BD***/
+        /****************
+         * INSERSÕES BD *
+         ****************/
 
 
         protected function add_usuario()
         {
 
             $values = array(
-                $this->get_trigrama().'nome'         => $this->input->post('name'),
-                $this->get_trigrama().'email'        => $this->input->post('email'),
-                $this->get_trigrama().'senha'        => $this->input->post('password'),
-                $this->get_trigrama().'identificador'=> $this->input->post('identifier'),
-                $this->get_trigrama().'telefone'     => $this->input->post('phone'),
+                $this->get_trigrama().'nome'            => $this->input->post('name'),
+                $this->get_trigrama().'email'           => $this->input->post('email'),
+                $this->get_trigrama().'senha'           => $this->input->post('password'),
+                $this->get_trigrama().'identificador'   => $this->input->post('identifier'),
+                $this->get_trigrama().'tp_identificador'=> $this->input->post('tipo_pessoa'),
+                $this->get_trigrama().'telefone'        => $this->input->post('phone'),
+                $this->get_trigrama().'cep'             => $this->input->post('cep'),
+                $this->get_trigrama().'logradouro'      => $this->input->post('logradouro'),
+                $this->get_trigrama().'bairro'          => $this->input->post('bairro'),
+                $this->get_trigrama().'cidade'          => $this->input->post('cidade'),
+                $this->get_trigrama().'estado'          => $this->input->post('estado'),
             );
 
 
             $this->db->insert($this->searchDB(), $values);
         }
 
+        protected function update_usuario($attr, $value, $id)
+        {
+
+            $this->db->set($attr, $value)
+                     ->where($this->get_trigrama().'id', $id)
+                     ->update($this->searchDB());
+
+        }
 
 
-        /***CONSULTAS BD***/
+        /****************
+         * CONSULTAS BD *
+         ****************/
 
 
-        protected function get_id() 
+        protected function get_id_post() 
         {
             
             $where = array(
@@ -94,21 +144,56 @@
 
         }
 
-        protected function get_usuario($email, $senha, $dado) 
+        protected function get_id_session()
+        {
+            return $this->encryption->decrypt($this->session->id);
+        }
+
+        protected function get_usuario_session() 
         {
             
-            $where = array($this->get_trigrama().'email'=> $email,
-                           $this->get_trigrama().'senha'=> $senha);
+            $id = $this->get_id_session();
 
-            $consult = $this->db->select($dado)
-                                ->where($where)
+            $consult = $this->db->select($this->get_parameter())
+                                        ->where($this->get_trigrama().'id', $id)
+                                        ->get($this->searchDB())
+                                        ->result();
+
+            if (empty($consult))
+                return FALSE;
+            
+            return $consult[0];
+
+        }
+
+        protected function get_usuario($id, $attr = NULL) 
+        {
+            if ($attr == NULL)
+                $attr = $this->get_parameter();
+            $consult = $this->db->select($attr)
+                                ->where($this->get_trigrama().'id', $id)
                                 ->get($this->searchDB())
                                 ->result();
 
             if (empty($consult))
                 return FALSE;
             
-            return $consult[0]->$dado;
+            return $consult[0];
+
+        }
+
+        protected function get_usuario_acesso($id) 
+        {
+
+            $consult = $this->db->select($this->get_trigrama().'acesso')
+                                ->where($this->get_trigrama().'id', $id)
+                                ->get($this->searchDB())
+                                ->result();
+
+            if (empty($consult))
+                return FALSE;
+            
+            return $consult[0]->usu_acesso;
 
         }
 
@@ -122,17 +207,19 @@
         }
 
 
-        /***CONSULTAS SESSION***/
+
+        /*********************
+         * CONSULTAS SESSION *
+         *********************/
 
 
         protected function add_session()
         {
-            $id = $this->get_id();
+            $id = $this->get_id_post();
             $this->db->insert('controle_sessoes', 
                         array('cts_id'       => 0,
                               'cts_tabela'   => $this->searchDB(),
                               'cts_usu_chave'=> $this->encryption->encrypt($id),
-                              'cts_status'   => 'usu',
                               'cts_tempo'   => time()+7200));
             $this->session->set_userdata('id', $this->get_last_sessions());
         }
@@ -204,7 +291,10 @@
         }
 
 
-        /***PAGINAÇÃO***/
+
+        /*************
+         * PAGINAÇÃO *
+         *************/
 
 
         public function data_pagination($db, $parameters, $page, $num_lines = NULL)
@@ -240,62 +330,93 @@
         }
 
 
-        /***NAVEGAÇÃO SUPERIOR***/
+        /**********************
+         * NAVEGAÇÃO SUPERIOR *
+         **********************/
+
+
         public function create_topnav($type)
         {
+            $selects_usu = array(
+                'pages/line' => 'Seus Dados',
+                'pages/cep'=> 'Ver Endereço'
+            );
+
+            $selects_adm = array(
+                'pages/table' => 'Todos Dados',
+                'pages/line' => 'Seus Dados',
+                'pages/cep'=> 'Ver Endereço'
+            );
 
             $html = "<div class='topnav'>";
             
-            if($type == 't')
+            $active = FALSE;
+            for($i = 0; $i < 5; $i++)
             {
-                $html .= "<br><a  href = ";
-                $html .= site_url('pages/line');
-                $html .= ">Seus dados</a>";
-
-                $html .= "<br><a class='active' href = ";
-                $html .= site_url('pages/table');
-                $html .= ">Todos os dados</a>";
-
-                $html .= "<br><a href = ";
-                $html .= site_url('insert');
-                $html .= ">Inserir dados</a>";
+                switch($type)
+                {
+                    case 'l': 
+                    case 't': 
+                    case 'c': if($i == 0) $active = TRUE; break;
+                    case 'i': if($i == 1) $active = TRUE; break;
+                    case 'u': if($i == 2) $active = TRUE;
+                };
+                if($this->get_usuario_acesso($this->get_id_session()) == 'adm')
+                {
+                    switch($i)
+                    {
+                        case 0: $html .= $this->create_subtopnav($selects_adm, 'Dados'); break;
+                        case 2: $html .= $this->create_topnav_item('insert',        'Inserir Dados',    $active); break;
+                        case 3: $html .= $this->create_topnav_item('update',        'Atualizar Dados',  $active); break;
+                    };
+                }
+                else
+                {
+                    switch($i)
+                    {
+                        case 0: $html .= $this->create_subtopnav($selects_usu, 'Dados'); break;
+                        case 2: $html .= $this->create_topnav_item('insert',        'Inserir Dados',    $active); break;
+                        case 3: $html .= $this->create_topnav_item('update',        'Atualizar Dados',  $active); break;
+                    };
+                }
+                $active = FALSE;
             }
-            else if($type == 'l')
-            {
-                $html .= "<br><a class='active' href = '";
-                $html .= site_url('pages/line');
-                $html .= "'>Seus dados</a>";
 
-                $html .= "<br><a href = ";
-                $html .= site_url('pages/table');
-                $html .= ">Todos os dados</a>";
-
-                $html .= "<br><a href = ";
-                $html .= site_url('insert');
-                $html .= ">Inserir dados</a>";
-            }else if($type == 'i')
-            {
-                $html .= "<br><a href = ";
-                $html .= site_url('pages/line');
-                $html .= ">Seus dados</a>";
-
-                $html .= "<br><a href = ";
-                $html .= site_url('pages/table');
-                $html .= ">Todos os dados</a>";
-
-                $html .= "<br><a class='active' href = ";
-                $html .= site_url('insert');
-                $html .= ">Inserir dados</a>";
-            }
-            
-
-            $html .= "<a href = ".site_url('logout/close_session').">Fechar sessão</a>";
-            $html .= "</div>";
+            $html .= "<a href = ".site_url('logout/close_session').">Fechar Sessão</a></div>";
 
             return $html;
 
         }
 
+        private function create_topnav_item($url, $nome, $active = FALSE, $subtopnav = NULL) : string
+        {
+
+            if($active == FALSE)
+                $html = '<br><a href = ';
+            else
+                $html = '<br><a class="active" href = ';
+
+            $html .= site_url($url);
+
+            $html .= '>'.$nome.$subtopnav.'</a>';
+            return $html;
+        }
+
+        private function create_subtopnav($array, $title) : string
+        {
+            $html = '<div class="subtopnav">';
+            $html .= '<span>'.$title.'</span>';
+
+            foreach($array as $url => $nome)
+            {
+                $html .= '<br><a class="subtopnav-item" href = ';
+                $html .= site_url($url);
+                $html .= '>'.$nome.'</a>';
+            };
+
+            $html .= '</div>';
+            return $html;
+        }
     }
 
 ?>

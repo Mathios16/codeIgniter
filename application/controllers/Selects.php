@@ -28,19 +28,28 @@
             $data['topnav'] = $this->create_topnav('t');
 
 
-            $data['table_heading'] = explode(",", $this->get_parameter());
+            $data['table_heading'] = explode(",", 'id,'.$this->get_parameter());
+
             foreach($data['table_heading'] as $key => $val)
-                $data['table_heading'][$key] = str_replace($this->get_trigrama(), '', $val);
+            {
+                if($key == 5)
+                    $data['table_heading'][$key] = 'tp';
+                else
+                    $data['table_heading'][$key] = str_replace($this->get_trigrama(), '', $val);
+            }
 
-
-            $data['consult'] = $this->data_pagination($this->searchDB(), $this->get_parameter(), $this->uri->segment(3), 2);
-
+            $data['consult'] = $this->data_pagination($this->searchDB(), $this->get_trigrama().'id,'.$this->get_parameter(), $this->uri->segment(3));
 
             $data['pagination'] = $this->create_pagination(base_url('selects/select_table'), $this->searchDB());
 
             $data['total_pages'] = $this->db->count_all_results($this->searchDB());
 
             $data['page_title'] = 'table';
+
+            $data['scripts'] = array(
+                'jquery/jquery-3.7.1.min.js' => 'text/javascript',
+                'jquery_get_id.js' => 'text/javascript'
+            );
 
             $this->load->view('templates/header', $data);
             $this->load->view('pages/selects');
@@ -56,19 +65,48 @@
 
             $data['table_heading'] = explode(",", $this->get_parameter());
             foreach($data['table_heading'] as $key => $val)
-                $data['table_heading'][$key] = str_replace($this->get_trigrama(), '', $val);
+            {
+                if($key == 4)
+                    $data['table_heading'][$key] = 'tp';
+                else
+                    $data['table_heading'][$key] = str_replace($this->get_trigrama(), '', $val);
+            }
 
-            $id = $this->encryption->decrypt($this->session->id);
-
-            $data['consult'] = $this->db->select($this->get_parameter())
-                                        ->where($this->get_trigrama().'id', $id)
-                                        ->get($this->searchDB())
-                                        ->result();
+            $data['consult'] = $this->get_usuario_session();
             
             $data['page_title'] = 'line';
 
             $this->load->view('templates/header', $data);
             $this->load->view('pages/selects');
+            $this->load->view('templates/footer');
+
+        }
+
+        public function select_dados_cep()
+        {
+
+            $data['type'] = 'c';
+            $data['topnav'] = $this->create_topnav('c');
+
+            $data['table_heading'] = array(
+                'cep',
+                'logradouro',
+                'bairro',
+                'localidade',
+                'UF'
+            );
+
+            $data['cep'] = $this->get_usuario($this->get_id_session(), $this->get_trigrama().'cep')->usu_cep;
+            
+            $data['page_title'] = 'cep';
+
+            $data['scripts'] = array(
+                'jquery/jquery-3.7.1.min.js' => 'text/javascript',
+                'jquery_cep.js' => 'text/javascript',
+            );
+
+            $this->load->view('templates/header', $data);
+            $this->load->view('pages/dados_cep');
             $this->load->view('templates/footer');
 
         }
