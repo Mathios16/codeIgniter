@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 08-Dez-2023 às 16:23
+-- Tempo de geração: 11-Dez-2023 às 16:08
 -- Versão do servidor: 10.4.27-MariaDB
 -- versão do PHP: 7.4.33
 
@@ -34,13 +34,6 @@ CREATE TABLE `controle_sessoes` (
   `cts_tempo` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
---
--- Extraindo dados da tabela `controle_sessoes`
---
-
-INSERT INTO `controle_sessoes` (`cts_id`, `cts_tabela`, `cts_usu_chave`, `cts_tempo`) VALUES
-(143, 'usuarios', '66c08becddf5d2588b08308199f66938346ca0c7c5f0a4fcf7d4a1fc7a097f18a0946013ed171d480e68b8e3b37ed8fd991e1c68c4d87c00f9332f9e099848f0d16fvtq6xnjwSNDoakUTj+T9WIXEdFqeA7Bsy4fFC7Q=', 1702054831);
-
 -- --------------------------------------------------------
 
 --
@@ -60,7 +53,7 @@ CREATE TABLE `tentativas` (
 --
 
 INSERT INTO `tentativas` (`tnt_id`, `tnt_num`, `tnt_tabela`, `tnt_tempo`, `tnt_num_esperas`) VALUES
-(2, 1, 'usuarios', NULL, 1);
+(2, 0, 'usuarios', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -81,6 +74,7 @@ CREATE TABLE `usuarios` (
   `usu_bairro` varchar(60) NOT NULL,
   `usu_cidade` varchar(40) NOT NULL,
   `usu_estado` char(2) NOT NULL,
+  `usu_github` varchar(50) DEFAULT NULL,
   `usu_acesso` varchar(3) NOT NULL DEFAULT 'usu'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -88,11 +82,12 @@ CREATE TABLE `usuarios` (
 -- Extraindo dados da tabela `usuarios`
 --
 
-INSERT INTO `usuarios` (`usu_id`, `usu_nome`, `usu_email`, `usu_senha`, `usu_identificador`, `usu_tp_identificador`, `usu_telefone`, `usu_cep`, `usu_logradouro`, `usu_bairro`, `usu_cidade`, `usu_estado`, `usu_acesso`) VALUES
-(1, 'matheus', 'matheussalomao12m@gmail.com', 'Mathios', '477.236.858', 'cpf', '+55(11)94613-1', '08830-792', '', '', '', '', 'adm'),
-(2, 'Camill', 'camillasalomao@gmail.com', 'c0312', '477', 'cpf', '+11(94)61311-1', '08830-792', '', '', '', '', 'usu'),
-(9, 'eu1', 'eu@gmail.com', '123', '1', 'cnpj', '12345', '', '', '', '', '', 'usu'),
-(10, 'teste', 'teste@outlook.com', '321', '321', 'cnpj', '321', '', '', '', '', '', 'usu');
+INSERT INTO `usuarios` (`usu_id`, `usu_nome`, `usu_email`, `usu_senha`, `usu_identificador`, `usu_tp_identificador`, `usu_telefone`, `usu_cep`, `usu_logradouro`, `usu_bairro`, `usu_cidade`, `usu_estado`, `usu_github`, `usu_acesso`) VALUES
+(1, 'matheus', 'matheussalomao12m@gmail.com', 'Mathios', '477.236.858', 'cpf', '+55(11)94613-1', '08830-792', 'Rua Expedicionário Francisco Lopes da Cruz', 'Villa Di Cesar', 'Mogi das Cruzes', 'SP', 'Mathios16', 'adm'),
+(2, 'Camill', 'camillasalomao@gmail.com', 'c0312', '477', 'cpf', '+11(94)61311-1', '08830-792', '', '', '', '', '', 'usu'),
+(9, 'eu1', 'eu@gmail.com', '123', '1', 'cnpj', '12345', '', '', '', '', '', '', 'usu'),
+(10, 'teste', 'teste@outlook.com', '321', '321', 'cnpj', '321', '', '', '', '', '', '', 'usu'),
+(39, 'math', 'matheus.salomao@fatec.sp.gov.br', '123', '123', 'cpf', '+55(11)94613-1', '08830-792', 'Rua Expedicionário Francisco Lopes da Cruz', 'Villa Di Cesar', 'Mogi das Cruzes', 'SP', '', 'usu');
 
 --
 -- Índices para tabelas despejadas
@@ -125,7 +120,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de tabela `controle_sessoes`
 --
 ALTER TABLE `controle_sessoes`
-  MODIFY `cts_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=144;
+  MODIFY `cts_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=150;
 
 --
 -- AUTO_INCREMENT de tabela `tentativas`
@@ -137,7 +132,7 @@ ALTER TABLE `tentativas`
 -- AUTO_INCREMENT de tabela `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `usu_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `usu_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
