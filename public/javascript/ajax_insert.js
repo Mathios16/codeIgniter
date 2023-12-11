@@ -16,6 +16,23 @@ $('html').on('click', 'input[name="tipo_pessoa"]', function ()
 
 })
 
+$('#cep').blur( function() {
+    var cep = $('input[name="cep"]').val()
+    if( cep == null)
+        return
+    console.log(cep)
+    getCep(cep).then(resposta => {
+        resposta.json()
+        .then((dados) => {
+            console.log(dados)
+            $('input[name="logradouro"]').attr('value',dados.logradouro)
+            $('input[name="bairro"]').attr('value',dados.bairro)
+            $('input[name="cidade"]').attr('value',dados.localidade)
+            $('input[name="estado"]').attr('value', dados.uf)
+        })
+    })
+})
+
 
 $('html').on('submit', '#insert', function (e)
 {
@@ -45,16 +62,13 @@ $('html').on('submit', '#insert', function (e)
                 $('.error-phone').html(response.phone)
                 $('.error-identifier').html(response.identifier)
                 $('.error-cep').html(response.cep)
+                $('.error-github').html(response.github)
             
                 $('input[name="csrf_token"]').val(response.csrf_token)
                     
             }
             else
             {
-                var cep = $('#cep').val()
-
-                getCep(cep)
-
                 window.location = 'http://127.0.0.1/new.teste/pages/table'
             }
         }           
@@ -62,17 +76,8 @@ $('html').on('submit', '#insert', function (e)
 })
 
 async function getCep(cep) { 
-    const fetch = await fetch('https://viacep.com.br/ws/'+cep+'/json/?callback=', {
+    const dados = await fetch('https://viacep.com.br/ws/'+cep+'/json/?callback=', {
         mode: 'cors'
     })
-    const resposta = await fetch.then((resposta) => {
-        resposta.json()
-    })
-    const dados = await resposta.then((dados) => {
-        console.log('teste')
-        $('#logradouro').attr('value', dados.logradouro)
-        $('#bairro').attr('value', dados.bairro)
-        $('#cidade').attr('value', dados.localidade)
-        $('#estado').attr('value', dados.uf)
-    })
+    return dados
 }

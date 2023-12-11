@@ -78,6 +78,12 @@
         'id'          => 'estado'
     );
 
+    $data['github'] = array(
+        'name'        => 'github',
+        'placeholder' => 'github',
+        'id'          => 'github'
+    );
+
     $data['insert'] = array(
         'type' => 'submmit',
         'name' => 'login'
@@ -95,16 +101,6 @@
     echo form_input($data['phone']).'</br>';
     echo '<div class="error-phone"></div></div>';
 
-    
-    echo '<div class="container-item">'.'<fieldset id = "tipo_pessoa">';
-    echo '<legend>Escolha o tipo de pessoa:</legend>';
-    echo '<div class="container-item">'.form_radio($data['pessoa_fisica'], 'Fisica').form_label('Física', 'fisica');
-    echo form_radio($data['pessoa_juridica'], 'Jurídica').form_label('Jurídica', 'juridica').'</div>';
-    echo '</fieldset>';
-
-    echo form_input($data['identifier']).'</br>';
-    echo '<div class="error-identifier"></div></div>';
-
     echo '<div class="container-item">'.form_input($data['cep']);
     echo '<div class="error-cep"></div>';
 
@@ -114,7 +110,19 @@
 
     echo form_input($data['cidade']);
 
-    echo form_input($data['estado']).'</div>';
+    echo form_input($data['estado']);
+
+    echo form_input($data['github']);
+    echo '<div class="error-github"></div></div>';
+
+    echo '<div class="container-item">'.'<fieldset id = "tipo_pessoa">';
+    echo '<legend>Escolha o tipo de pessoa:</legend>';
+    echo '<div class="container-item">'.form_radio($data['pessoa_fisica'], 'Fisica').form_label('Física', 'fisica');
+    echo form_radio($data['pessoa_juridica'], 'Jurídica').form_label('Jurídica', 'juridica').'</div>';
+    echo '</fieldset>';
+
+    echo form_input($data['identifier']).'</br>';
+    echo '<div class="error-identifier"></div></div>';
 
     echo '<br><button type="submit">Inserir</button>';
     echo form_close();

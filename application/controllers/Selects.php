@@ -73,58 +73,36 @@
             }
 
             $data['consult'] = $this->get_usuario_session();
-            
-            $data['page_title'] = 'line';
 
-            $this->load->view('templates/header', $data);
-            $this->load->view('pages/selects');
-            $this->load->view('templates/footer');
 
-        }
-
-        public function select_dados_cep()
-        {
-
-            $data['type'] = 'c';
-            $data['topnav'] = $this->create_topnav('c');
-
-            $data['table_heading'] = array(
-                'cep',
+            $data['table_heading_cep'] = array(
                 'logradouro',
                 'bairro',
                 'localidade',
                 'UF'
             );
 
-            $data['cep'] = $this->get_usuario($this->get_id_session(), $this->get_trigrama().'cep')->usu_cep;
+            $data['consult_cep'] = $this->get_usuario_session('endereco');
+
             
-            $data['page_title'] = 'cep';
-
-            $data['scripts'] = array(
-                'jquery/jquery-3.7.1.min.js' => 'text/javascript',
-                'jquery_cep.js' => 'text/javascript',
-            );
-
-            $this->load->view('templates/header', $data);
-            $this->load->view('pages/dados_cep');
-            $this->load->view('templates/footer');
-
-        }
-
-        public function select_dados_github()
-        {
-
-            $data['type'] = 'g';
-            $data['topnav'] = $this->create_topnav('g');
-
-            $data['heading'] = array(
-                'avatar',
+            $data['table_heading_github'] = array(
+                'usuario',
                 'nome',
-                'login',
+                'criação',
                 'url'
             );
-            
-            $data['page_title'] = 'github';
+
+            $data['table_heading_repos'] = array(
+                'nome',
+                'visibilidade',
+                'url',
+                'criação',
+                'ultima atualizacao'
+            );
+
+            $data['consult_github'] = $this->get_usuario($this->get_id_session(), 'github')->usu_github;
+
+            $data['page_title'] = 'line';
 
             $data['scripts'] = array(
                 'jquery/jquery-3.7.1.min.js' => 'text/javascript',
@@ -132,7 +110,7 @@
             );
 
             $this->load->view('templates/header', $data);
-            $this->load->view('pages/dados_github');
+            $this->load->view('pages/selects');
             $this->load->view('templates/footer');
 
         }

@@ -25,6 +25,7 @@
                 $this->form_validation->set_rules('identifier','tipo pessoa','required');
                 $this->form_validation->set_rules('phone','telefone','required');
                 $this->form_validation->set_rules('cep','cep','required');
+                $this->form_validation->set_rules('github','github','required');
 
                 if( ! $this->form_validation->run())
                 {
@@ -38,6 +39,7 @@
                                           'identifier'  => form_error('identifier'),
                                           'phone'       => form_error('phone'),
                                           'cep'         => form_error('cep'),
+                                          'github'      => form_error('github'),
                                           'type'        => 'null',
                                           'referrer'    => $this->agent->referrer(),
                                           'platform'    => $this->agent->platform(),

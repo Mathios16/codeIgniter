@@ -69,7 +69,19 @@
                         .$this->get_trigrama().'identificador , '
                         .$this->get_trigrama().'tp_identificador , '
                         .$this->get_trigrama().'telefone , '
-                        .$this->get_trigrama().'cep';
+                        .$this->get_trigrama().'cep , '
+                        .$this->get_trigrama().'github';
+
+            return $parameter;
+        }
+
+        protected function get_endereco() : String 
+        {
+
+            $parameter = $this->get_trigrama().'logradouro , '
+                        .$this->get_trigrama().'bairro , '
+                        .$this->get_trigrama().'cidade , '
+                        .$this->get_trigrama().'estado';
 
             return $parameter;
         }
@@ -103,6 +115,7 @@
                 $this->get_trigrama().'bairro'          => $this->input->post('bairro'),
                 $this->get_trigrama().'cidade'          => $this->input->post('cidade'),
                 $this->get_trigrama().'estado'          => $this->input->post('estado'),
+                $this->get_trigrama().'github'          => $this->input->post('github')
             );
 
 
@@ -149,12 +162,25 @@
             return $this->encryption->decrypt($this->session->id);
         }
 
-        protected function get_usuario_session() 
+        protected function get_usuario_session($attr = NULL) 
         {
             
             $id = $this->get_id_session();
 
-            $consult = $this->db->select($this->get_parameter())
+            if($attr == 'completo')
+            {
+                $parametros = $this->get_parameter().' , '.$this->get_endereco();
+            }
+            else if( $attr == 'endereco')
+            {
+                $parametros = $this->get_endereco();
+            }
+            else
+            {
+                $parametros = $this->get_parameter();
+            }
+
+            $consult = $this->db->select($parametros)
                                         ->where($this->get_trigrama().'id', $id)
                                         ->get($this->searchDB())
                                         ->result();
@@ -168,9 +194,24 @@
 
         protected function get_usuario($id, $attr = NULL) 
         {
-            if ($attr == NULL)
-                $attr = $this->get_parameter();
-            $consult = $this->db->select($attr)
+            if($attr == 'completo')
+            {
+                $parametros = $this->get_parameter().' , '.$this->get_endereco();
+            }
+            else if( $attr == 'endereco')
+            {
+                $parametros = $this->get_endereco();
+            }
+            else if( $attr == 'usuario')
+            {
+                $parametros = $this->get_parameter();
+            }
+            else
+            {
+                $parametros = $this->get_trigrama().$attr;
+                
+            }
+            $consult = $this->db->select($parametros)
                                 ->where($this->get_trigrama().'id', $id)
                                 ->get($this->searchDB())
                                 ->result();
@@ -337,15 +378,10 @@
 
         public function create_topnav($type)
         {
-            $selects_usu = array(
-                'pages/line' => 'Seus Dados',
-                'pages/cep'=> 'Ver Endereço'
-            );
 
             $selects_adm = array(
                 'pages/table' => 'Todos Dados',
-                'pages/line' => 'Seus Dados',
-                'pages/cep'=> 'Ver Endereço'
+                'pages/line' => 'Seus Dados'
             );
 
             $html = "<div class='topnav'>";
@@ -356,8 +392,7 @@
                 switch($type)
                 {
                     case 'l': 
-                    case 't': 
-                    case 'c': if($i == 0) $active = TRUE; break;
+                    case 't': if($i == 0) $active = TRUE; break;
                     case 'i': if($i == 1) $active = TRUE; break;
                     case 'u': if($i == 2) $active = TRUE;
                 };
@@ -365,18 +400,18 @@
                 {
                     switch($i)
                     {
-                        case 0: $html .= $this->create_subtopnav($selects_adm, 'Dados'); break;
-                        case 2: $html .= $this->create_topnav_item('insert',        'Inserir Dados',    $active); break;
-                        case 3: $html .= $this->create_topnav_item('update',        'Atualizar Dados',  $active); break;
+                        case 0: $html .= $this->create_subtopnav($selects_adm, 'Dados', $active); break;
+                        case 1: $html .= $this->create_topnav_item('insert',        'Inserir Dados',    $active); break;
+                        case 2: $html .= $this->create_topnav_item('update',        'Atualizar Dados',  $active); break;
                     };
                 }
                 else
                 {
                     switch($i)
                     {
-                        case 0: $html .= $this->create_subtopnav($selects_usu, 'Dados'); break;
-                        case 2: $html .= $this->create_topnav_item('insert',        'Inserir Dados',    $active); break;
-                        case 3: $html .= $this->create_topnav_item('update',        'Atualizar Dados',  $active); break;
+                        case 0: $html .= $this->create_topnav_item('pages/line',    'Seus Dados',       $active); break;
+                        case 1: $html .= $this->create_topnav_item('insert',        'Inserir Dados',    $active); break;
+                        case 2: $html .= $this->create_topnav_item('update',        'Atualizar Dados',  $active); break;
                     };
                 }
                 $active = FALSE;
@@ -402,10 +437,13 @@
             return $html;
         }
 
-        private function create_subtopnav($array, $title) : string
+        private function create_subtopnav($array, $title, $active) : string
         {
             $html = '<div class="subtopnav">';
-            $html .= '<span>'.$title.'</span>';
+            if($active == FALSE)
+                $html .= '<span>'.$title.'</span>';
+            else
+                $html .= '<span class="active">'.$title.'</span>';
 
             foreach($array as $url => $nome)
             {
