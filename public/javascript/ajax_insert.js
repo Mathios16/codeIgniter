@@ -51,49 +51,28 @@ $('html').on('submit', '#insert', function (e)
             }
             else
             {
-                var cep = $('input[name="cep"]').val()
+                var cep = $('#cep').val()
 
-                if (cep != "") 
-                {
-
-                    var validacep = /^[0-9]{5}-[0-9]{3}$/
-
-                    if(validacep.test(cep)) 
-                    {
-                        $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) 
-                        {
-                            dados.preventDefault()
-                            if (!("erro" in dados)) 
-                            {
-                                $('input[name="logradouro"]').attr('value', dados.logradouro)
-                                $('input[name="bairro"]').attr('value',dados.bairro)
-                                $('input[name="cidade"]').attr('value',dados.localidade)
-                                $('input[name="estado"]').attr('value',dados.uf)
-                            }
-                            else 
-                            {
-                                $('.error-cep').html('cep inválido')
-                                $('input[name="csrf_token"]').val(response.csrf_token)
-                                return
-                            }
-                        });
-                    }
-                    else 
-                    {
-                        $('.error-cep').html('cep inválido')
-                        $('input[name="csrf_token"]').val(response.csrf_token)
-                        return
-                    }
-                } 
-                else 
-                {
-                    $('.error-cep').html('cep inválido')
-                    $('input[name="csrf_token"]').val(response.csrf_token)
-                    return
-                }
+                getCep(cep)
 
                 window.location = 'http://127.0.0.1/new.teste/pages/table'
             }
         }           
     })
 })
+
+async function getCep(cep) { 
+    const fetch = await fetch('https://viacep.com.br/ws/'+cep+'/json/?callback=', {
+        mode: 'cors'
+    })
+    const resposta = await fetch.then((resposta) => {
+        resposta.json()
+    })
+    const dados = await resposta.then((dados) => {
+        console.log('teste')
+        $('#logradouro').attr('value', dados.logradouro)
+        $('#bairro').attr('value', dados.bairro)
+        $('#cidade').attr('value', dados.localidade)
+        $('#estado').attr('value', dados.uf)
+    })
+}
