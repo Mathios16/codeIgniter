@@ -32,34 +32,31 @@ $('html').on('submit', '#update', function (e)
             }
             else
             {
-                var validacep = /^[0-9]{5}-[0-9]{3}$/
-
-                if(validacep.test(cep)) 
-                {
-
-                    $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) 
-                    {
-
-                        if (!("erro" in dados)) 
-                        {
-                            $("#logradouro").text(dados.logradouro)
-                            $("#bairro").text(dados.bairro)
-                            $("#cidade").text(dados.localidade)
-                            $("#estado").text(dados.uf)
-                        }
-                        else 
-                        {
-                            $('.error-cep').html(response.cep)
-                        }
-                    });
-                }
-                else 
-                {
-                    $('.error-cep').html(response.cep)
-                }
-
+                var cep = $('#cep').val()
+                getCep(cep)
+                
                 window.location = 'http://127.0.0.1/new.teste/pages/line'
             }
         }           
     })
 })
+
+async function getCep(cep) { 
+    await fetch('https://viacep.com.br/ws/'+cep+'/json/?callback=', {
+        mode: 'cors'
+
+    })
+    .then((resposta) => {
+        resposta.json()
+        .then(dados => {
+            $('#logradouro').text(dados.logradouro)
+            $('#bairro').text(dados.bairro)
+            $('#localidade').text(dados.localidade)
+            $('#uf').text(dados.uf)
+        })
+    })
+    .catch((erro) => 
+    {
+        $('.error-cep').html(erro)
+    })
+}

@@ -39,6 +39,7 @@
             }
 
             $data['consult'] = $this->data_pagination($this->searchDB(), $this->get_trigrama().'id,'.$this->get_parameter(), $this->uri->segment(3));
+
             $data['pagination'] = $this->create_pagination(base_url('selects/select_table'), $this->searchDB());
 
             $data['total_pages'] = $this->db->count_all_results($this->searchDB());
