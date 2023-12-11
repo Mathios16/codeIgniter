@@ -95,7 +95,7 @@
         </div>
 
         </div><div class="container">
-            <table id="git-repos">
+            <table id="table">
                 <thead class="tbl-header">
                     <tr>
                         <?php 
@@ -104,7 +104,7 @@
                         ?>
                     </tr>
                 </thead>
-                <tbody class="tbl-repos">
+                <tbody id="git-repos" class="tbl-content">
                     
                 </tbody>
             </table>
