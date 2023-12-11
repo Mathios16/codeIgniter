@@ -1,6 +1,7 @@
-$('html').on('click', 'input[id="get_usuario"]', function ()
+$('html').on('click', 'input[id="github"]', function (e)
 {
 
+    e.preventDefault()
     /*const octokit = new Octokit({
         auth: 'YOUR-TOKEN'
     })
@@ -12,12 +13,15 @@ $('html').on('click', 'input[id="get_usuario"]', function ()
     }
     })*/
 
-    var username = $('input[name="username"]').val()
+    var username = $('input[name="username"]').val().split(' ').join('')
 
     if (username != "") 
     {
 
-        
+        $.getJSON("https://api.github.com/users/"+ username, function(dados) 
+        {
+            
+        });
         
     }
 

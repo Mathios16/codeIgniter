@@ -110,6 +110,32 @@
 
         }
 
+        public function select_dados_github()
+        {
+
+            $data['type'] = 'g';
+            $data['topnav'] = $this->create_topnav('g');
+
+            $data['heading'] = array(
+                'avatar',
+                'nome',
+                'login',
+                'url'
+            );
+            
+            $data['page_title'] = 'github';
+
+            $data['scripts'] = array(
+                'jquery/jquery-3.7.1.min.js' => 'text/javascript',
+                'jquery_github.js' => 'text/javascript',
+            );
+
+            $this->load->view('templates/header', $data);
+            $this->load->view('pages/dados_github');
+            $this->load->view('templates/footer');
+
+        }
+
     }
 
 ?>
